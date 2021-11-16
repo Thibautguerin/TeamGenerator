@@ -43,3 +43,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b433a1da37260d0418e5b868cb8573ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  nbDoors: 2
+  nbRoomsAfterStartMin: 4
+  nbRoomsAfterStartMax: 6
+  nbRoomsBetweenDoorsMin: 3
+  nbRoomsBetweenDoorsMax: 5
+  nbRoomsSecondaryPathMin: 2
+  nbRoomsSecondaryPathMax: 3
+  nbRoomsBeforeBossMin: 4
+  nbRoomsBeforeBossMax: 6
