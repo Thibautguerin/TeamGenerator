@@ -23,9 +23,6 @@ public class Room : MonoBehaviour {
     {
 		_tilemapGroup = GetComponentInChildren<TilemapGroup>();
 		allRooms.Add(this);
-
-        SetupBit();
-		SetupDoor();
 	}
 
 	void SetupDoor()
@@ -124,6 +121,8 @@ public class Room : MonoBehaviour {
 
 	public bool CheckDoor(uint doorBit)
     {
+		SetupBit();
+
 		if ((mustBit & doorBit) == mustBit && (canBit & doorBit) == doorBit)
 			return true;
 		return false;
@@ -131,6 +130,8 @@ public class Room : MonoBehaviour {
 
 	public void InitDoor(List<Door.STATE> doorsState)
     {
+		SetupDoor();
+
 		int doorIndex = 0;
         for (int i = 0; i < doorsState.Count; i++)
         {

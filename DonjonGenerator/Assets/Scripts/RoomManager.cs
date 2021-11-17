@@ -30,6 +30,12 @@ public class RoomManager : MonoBehaviour
                     break;
             }
         }
+        RoomNode room = new RoomNode();
+        room.roomType = RoomType.NORMAL;
+        room.doors = 1 << 0 + 1 << 2;
+        room.doorsState = new List<Door.STATE>(4)
+        {Door.STATE.CLOSED, Door.STATE.CLOSED, Door.STATE.CLOSED, Door.STATE.CLOSED};
+        FindRoomfromNode(room);
     }
 
     public Room FindRoomfromNode(RoomNode node)
@@ -53,6 +59,8 @@ public class RoomManager : MonoBehaviour
             if (room.CheckDoor(node.doors))
                 possibleRoom.Add(room);
         }
+        if (possibleRoom.Count == 0)
+            Debug.LogError("Room not found");
         int r = Random.Range(0, possibleRoom.Count - 1);
         Room instRoom = Instantiate(possibleRoom[r]);
         instRoom.InitDoor(node.doorsState);
