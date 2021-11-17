@@ -11,19 +11,106 @@ public class Room : MonoBehaviour {
 	private TilemapGroup _tilemapGroup;
 
 	public static List<Room> allRooms = new List<Room>();
+	public static List<Room> StartRooms = new List<Room>();
+	public static List<Room> NormalRooms = new List<Room>();
+	public static List<Room> KeyRooms = new List<Room>();
+	public static List<Room> BossRooms = new List<Room>();
 
+	public RoomType type;
 	public DoorsInfo info;
+	private uint canBit =0;
+	private uint mustBit=0;
+	private List<Door> doorList = new List<Door>();
 
 
     void Awake()
     {
 		_tilemapGroup = GetComponentInChildren<TilemapGroup>();
 		allRooms.Add(this);
+        switch (type)
+        {
+            case RoomType.START:
+				StartRooms.Add(this);
+                break;
+            case RoomType.NORMAL:
+				NormalRooms.Add(this);
+                break;
+            case RoomType.KEY:
+				KeyRooms.Add(this);
+                break;
+            case RoomType.BOSS:
+				BossRooms.Add(this);
+                break;
+        }
+
+        SetupBit();
+		SetupDoor();
+	}
+
+	void SetupDoor()
+    {
+		Door[] doors = GetComponentsInChildren<Door>();
+		for (int i = 0; i < 4; i++)
+		{
+			if ((canBit & 1 << i) == 0)
+				continue;
+			Door doorToAdd = doors[0];
+			for (int j = 1; j < 4; j++)
+			{
+				switch (i)
+				{
+					case 0:
+						if (doors[j].transform.position.x < doorToAdd.transform.position.x)
+							doorToAdd = doors[j];
+						break;
+					case 1:
+						if (doors[j].transform.position.x > doorToAdd.transform.position.x)
+							doorToAdd = doors[j];
+						break;
+					case 2:
+						if (doors[j].transform.position.y > doorToAdd.transform.position.x)
+							doorToAdd = doors[j];
+						break;
+					case 3:
+						if (doors[j].transform.position.y < doorToAdd.transform.position.x)
+							doorToAdd = doors[j];
+						break;
+				}
+			}
+			doorList.Add(doorToAdd);
+		}
+	}
+
+	void SetupBit()
+    {
+		canBit += (uint)(info.leftDoors.canBeDoor ? 1 : 0) << 0;
+		canBit += (uint)(info.rightDoors.canBeDoor ? 1 : 0) << 1;
+		canBit += (uint)(info.upDoors.canBeDoor ? 1 : 0) << 2;
+		canBit += (uint)(info.bottomDoors.canBeDoor ? 1 : 0) << 3;
+		mustBit += (uint)(info.leftDoors.mustBeDoor ? 1 : 0) << 0;
+		mustBit += (uint)(info.rightDoors.mustBeDoor ? 1 : 0) << 1;
+		mustBit += (uint)(info.upDoors.mustBeDoor ? 1 : 0) << 2;
+		mustBit += (uint)(info.bottomDoors.mustBeDoor ? 1 : 0) << 3;
 	}
 
 	private void OnDestroy()
 	{
 		allRooms.Remove(this);
+		switch (type)
+		{
+			case RoomType.START:
+				StartRooms.Remove(this);
+				break;
+			case RoomType.NORMAL:
+				NormalRooms.Remove(this);
+				break;
+			case RoomType.KEY:
+				KeyRooms.Remove(this);
+				break;
+			case RoomType.BOSS:
+				BossRooms.Remove(this);
+				break;
+		}
 	}
 
 	void Start () {
@@ -68,6 +155,17 @@ public class Room : MonoBehaviour {
 		position.z = 0;
 		return (GetWorldRoomBounds().Contains(position));
 	}
+
+	public bool CheckDoor(uint doorBit)
+    {
+		if ((mustBit & doorBit) == mustBit && (canBit & doorBit) == doorBit)
+			return true;
+		return false;
+    }
+
+	public void InitDoor()
+    {
+    }
 
 	[System.Serializable]
 	public struct DoorsInfo
