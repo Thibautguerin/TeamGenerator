@@ -32,15 +32,30 @@ public class RoomManager : MonoBehaviour
         }
     }
 
-    // Start is called before the first frame update
-    void Start()
+    public Room FindRoomfromNode(RoomNode node)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        List<Room> possibleRoom = new List<Room>();
+        List<Room> selectedRoom = NormalRooms;
+        switch (node.roomType)
+        {
+            case RoomType.START:
+                selectedRoom = StartRooms;
+                break;
+            case RoomType.KEY:
+                selectedRoom = KeyRooms;
+                break;
+            case RoomType.BOSS:
+                selectedRoom = BossRooms;
+                break;
+        }
+        foreach (Room room in selectedRoom)
+        {
+            if (room.CheckDoor(node.doors))
+                possibleRoom.Add(room);
+        }
+        int r = Random.Range(0, possibleRoom.Count - 1);
+        Room instRoom = Instantiate(possibleRoom[r]);
+        instRoom.InitDoor(node.doorsState);
+        return instRoom;
     }
 }

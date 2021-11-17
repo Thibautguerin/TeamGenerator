@@ -129,8 +129,16 @@ public class Room : MonoBehaviour {
 		return false;
     }
 
-	public void InitDoor()
+	public void InitDoor(List<Door.STATE> doorsState)
     {
+		int doorIndex = 0;
+        for (int i = 0; i < doorsState.Count; i++)
+        {
+			if ((canBit & 1 << i) == 0)
+				continue;
+			doorList[doorIndex].SetState(doorsState[i]);
+			doorIndex++;
+		}
     }
 
 	[System.Serializable]
