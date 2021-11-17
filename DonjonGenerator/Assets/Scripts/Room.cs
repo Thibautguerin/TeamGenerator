@@ -11,10 +11,6 @@ public class Room : MonoBehaviour {
 	private TilemapGroup _tilemapGroup;
 
 	public static List<Room> allRooms = new List<Room>();
-	public static List<Room> StartRooms = new List<Room>();
-	public static List<Room> NormalRooms = new List<Room>();
-	public static List<Room> KeyRooms = new List<Room>();
-	public static List<Room> BossRooms = new List<Room>();
 
 	public RoomType type;
 	public DoorsInfo info;
@@ -27,21 +23,6 @@ public class Room : MonoBehaviour {
     {
 		_tilemapGroup = GetComponentInChildren<TilemapGroup>();
 		allRooms.Add(this);
-        switch (type)
-        {
-            case RoomType.START:
-				StartRooms.Add(this);
-                break;
-            case RoomType.NORMAL:
-				NormalRooms.Add(this);
-                break;
-            case RoomType.KEY:
-				KeyRooms.Add(this);
-                break;
-            case RoomType.BOSS:
-				BossRooms.Add(this);
-                break;
-        }
 
         SetupBit();
 		SetupDoor();
@@ -96,21 +77,6 @@ public class Room : MonoBehaviour {
 	private void OnDestroy()
 	{
 		allRooms.Remove(this);
-		switch (type)
-		{
-			case RoomType.START:
-				StartRooms.Remove(this);
-				break;
-			case RoomType.NORMAL:
-				NormalRooms.Remove(this);
-				break;
-			case RoomType.KEY:
-				KeyRooms.Remove(this);
-				break;
-			case RoomType.BOSS:
-				BossRooms.Remove(this);
-				break;
-		}
 	}
 
 	void Start () {
