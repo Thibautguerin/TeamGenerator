@@ -423,44 +423,44 @@ public class DonjonGenerator : MonoBehaviour
             {
                 if (currentRoom.previous.position - currentRoom.position != new Vector2Int(-1, 0))
                 {
-                    shortestDistance.Add(new KeyValuePair<float, Vector2Int>(Vector2.Distance(currentRoom.position, currentRoom.position + new Vector2Int(-1, 0)), new Vector2Int(-1, 0)));
+                    shortestDistance.Add(new KeyValuePair<float, Vector2Int>(Vector2.Distance(firstRoom.position, currentRoom.position + new Vector2(-1, 0)), new Vector2Int(-1, 0)));
                 }
                 if (currentRoom.previous.position - currentRoom.position != new Vector2Int(1, 0))
                 {
-                    shortestDistance.Add(new KeyValuePair<float, Vector2Int>(Vector2.Distance(currentRoom.position, currentRoom.position + new Vector2Int(1, 0)), new Vector2Int(1, 0)));
+                    shortestDistance.Add(new KeyValuePair<float, Vector2Int>(Vector2.Distance(firstRoom.position, currentRoom.position + new Vector2(1, 0)), new Vector2Int(1, 0)));
                 }
                 if (currentRoom.previous.position - currentRoom.position != new Vector2Int(0, 1))
                 {
-                    shortestDistance.Add(new KeyValuePair<float, Vector2Int>(Vector2.Distance(currentRoom.position, currentRoom.position + new Vector2Int(0, 1)), new Vector2Int(0, 1)));
+                    shortestDistance.Add(new KeyValuePair<float, Vector2Int>(Vector2.Distance(firstRoom.position, currentRoom.position + new Vector2(0, 1)), new Vector2Int(0, 1)));
                 }
                 if (currentRoom.previous.position - currentRoom.position != new Vector2Int(0, -1))
                 {
-                    shortestDistance.Add(new KeyValuePair<float, Vector2Int>(Vector2.Distance(currentRoom.position, currentRoom.position + new Vector2Int(0, -1)), new Vector2Int(0, -1)));
+                    shortestDistance.Add(new KeyValuePair<float, Vector2Int>(Vector2.Distance(firstRoom.position, currentRoom.position + new Vector2(0, -1)), new Vector2Int(0, -1)));
                 }
             }
             else
             {
-                Debug.Log("HEYEYEYYEYEYY");
-                shortestDistance.Add(new KeyValuePair<float, Vector2Int>(Vector2.Distance(currentRoom.position, currentRoom.position + new Vector2Int(-1, 0)), new Vector2Int(-1, 0)));
-                shortestDistance.Add(new KeyValuePair<float, Vector2Int>(Vector2.Distance(currentRoom.position, currentRoom.position + new Vector2Int(1, 0)), new Vector2Int(1, 0)));
-                shortestDistance.Add(new KeyValuePair<float, Vector2Int>(Vector2.Distance(currentRoom.position, currentRoom.position + new Vector2Int(0, 1)), new Vector2Int(0, 1)));
-                shortestDistance.Add(new KeyValuePair<float, Vector2Int>(Vector2.Distance(currentRoom.position, currentRoom.position + new Vector2Int(0, -1)), new Vector2Int(0, -1)));
+                shortestDistance.Add(new KeyValuePair<float, Vector2Int>(Vector2.Distance(firstRoom.position, currentRoom.position + new Vector2Int(-1, 0)), new Vector2Int(-1, 0)));
+                shortestDistance.Add(new KeyValuePair<float, Vector2Int>(Vector2.Distance(firstRoom.position, currentRoom.position + new Vector2Int(1, 0)), new Vector2Int(1, 0)));
+                shortestDistance.Add(new KeyValuePair<float, Vector2Int>(Vector2.Distance(firstRoom.position, currentRoom.position + new Vector2Int(0, 1)), new Vector2Int(0, 1)));
+                shortestDistance.Add(new KeyValuePair<float, Vector2Int>(Vector2.Distance(firstRoom.position, currentRoom.position + new Vector2Int(0, -1)), new Vector2Int(0, -1)));
             }
             shortestDistance.Sort((x, y) => { return x.Key.CompareTo(y.Key);});
 
             while (badPosition && nbIter <= 20)
             {
                 roomNodeTmp = null;
-                int randomNb = Random.Range(0, 15);
+                int randomNb = Random.Range(0, 100);
 
                 Vector2Int orientation;
                 if (shortestDistance.Count == 3)
                 {
-                    if (randomNb <= 4)
+                    // 70 20 10
+                    if (randomNb <= 69)
                     {
                         orientation = shortestDistance[0].Value;
                     }
-                    else if (randomNb <= 9)
+                    else if (randomNb <= 89)
                     {
                         orientation = shortestDistance[1].Value;
                     }
@@ -471,15 +471,16 @@ public class DonjonGenerator : MonoBehaviour
                 }
                 else
                 {
-                    if (randomNb <= 4)
+                    // 60 25 10 5
+                    if (randomNb <= 59)
                     {
                         orientation = shortestDistance[0].Value;
                     }
-                    else if (randomNb <= 9)
+                    else if (randomNb <= 84)
                     {
                         orientation = shortestDistance[1].Value;
                     }
-                    else if (randomNb <= 12)
+                    else if (randomNb <= 94)
                     {
                         orientation = shortestDistance[2].Value;
                     }
