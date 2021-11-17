@@ -166,14 +166,14 @@ public class DonjonGenerator : MonoBehaviour
         if (noError)
         {
             noError = GenerateSecondaryPath();
-            /*if (noError)
+            if (noError)
             {
                 noError = GenerateComeBackPath();
                 if (noError)
                 {
                     noError = GenerateSecretRoom();
                 }
-            }*/
+            }
         }
 
         if (!noError)
@@ -407,6 +407,7 @@ public class DonjonGenerator : MonoBehaviour
     public bool GenerateComeBackPath()
     {
         RoomNode currentRoom = lastRoom;
+        lastRoom.isComeBackPath = true;
 
         while (currentRoom != firstRoom)
         {
@@ -417,41 +418,75 @@ public class DonjonGenerator : MonoBehaviour
 
             RoomNode roomNodeTmp = null;
 
-            Dictionary<float, Vector2Int> shortestDistance = new Dictionary<float, Vector2Int>(4);
-            shortestDistance.Add(Vector2.Distance(currentRoom.position, currentRoom.position + new Vector2Int(-1, 0)), new Vector2Int(-1, 0));
-            shortestDistance.Add(Vector2.Distance(currentRoom.position, currentRoom.position + new Vector2Int(1, 0)), new Vector2Int(1, 0));
-            shortestDistance.Add(Vector2.Distance(currentRoom.position, currentRoom.position + new Vector2Int(0, 1)), new Vector2Int(0, 1));
-            shortestDistance.Add(Vector2.Distance(currentRoom.position, currentRoom.position + new Vector2Int(0, -1)), new Vector2Int(0, -1));
-
-            List<float> distances = new List<float>(4);
-            distances.Add(Vector2.Distance(currentRoom.position, currentRoom.position + new Vector2Int(-1, 0)));
-            distances.Add(Vector2.Distance(currentRoom.position, currentRoom.position + new Vector2Int(1, 0)));
-            distances.Add(Vector2.Distance(currentRoom.position, currentRoom.position + new Vector2Int(0, 1)));
-            distances.Add(Vector2.Distance(currentRoom.position, currentRoom.position + new Vector2Int(0, -1)));
-
-            distances.Sort();
+            List<KeyValuePair<float, Vector2Int>> shortestDistance = new List<KeyValuePair<float, Vector2Int>>();
+            if (currentRoom.previous != null)
+            {
+                if (currentRoom.previous.position - currentRoom.position != new Vector2Int(-1, 0))
+                {
+                    shortestDistance.Add(new KeyValuePair<float, Vector2Int>(Vector2.Distance(currentRoom.position, currentRoom.position + new Vector2Int(-1, 0)), new Vector2Int(-1, 0)));
+                }
+                if (currentRoom.previous.position - currentRoom.position != new Vector2Int(1, 0))
+                {
+                    shortestDistance.Add(new KeyValuePair<float, Vector2Int>(Vector2.Distance(currentRoom.position, currentRoom.position + new Vector2Int(1, 0)), new Vector2Int(1, 0)));
+                }
+                if (currentRoom.previous.position - currentRoom.position != new Vector2Int(0, 1))
+                {
+                    shortestDistance.Add(new KeyValuePair<float, Vector2Int>(Vector2.Distance(currentRoom.position, currentRoom.position + new Vector2Int(0, 1)), new Vector2Int(0, 1)));
+                }
+                if (currentRoom.previous.position - currentRoom.position != new Vector2Int(0, -1))
+                {
+                    shortestDistance.Add(new KeyValuePair<float, Vector2Int>(Vector2.Distance(currentRoom.position, currentRoom.position + new Vector2Int(0, -1)), new Vector2Int(0, -1)));
+                }
+            }
+            else
+            {
+                Debug.Log("HEYEYEYYEYEYY");
+                shortestDistance.Add(new KeyValuePair<float, Vector2Int>(Vector2.Distance(currentRoom.position, currentRoom.position + new Vector2Int(-1, 0)), new Vector2Int(-1, 0)));
+                shortestDistance.Add(new KeyValuePair<float, Vector2Int>(Vector2.Distance(currentRoom.position, currentRoom.position + new Vector2Int(1, 0)), new Vector2Int(1, 0)));
+                shortestDistance.Add(new KeyValuePair<float, Vector2Int>(Vector2.Distance(currentRoom.position, currentRoom.position + new Vector2Int(0, 1)), new Vector2Int(0, 1)));
+                shortestDistance.Add(new KeyValuePair<float, Vector2Int>(Vector2.Distance(currentRoom.position, currentRoom.position + new Vector2Int(0, -1)), new Vector2Int(0, -1)));
+            }
+            shortestDistance.Sort((x, y) => { return x.Key.CompareTo(y.Key);});
 
             while (badPosition && nbIter <= 20)
             {
                 roomNodeTmp = null;
-                int randomNb = Random.Range(0, 12);
+                int randomNb = Random.Range(0, 15);
 
-                Vector2Int orientation = new Vector2Int();
-                if (randomNb <= 6)
+                Vector2Int orientation;
+                if (shortestDistance.Count == 3)
                 {
-                    shortestDistance.TryGetValue(distances[0], out orientation);
-                }
-                else if (randomNb <= 8)
-                {
-                    shortestDistance.TryGetValue(distances[1], out orientation);
-                }
-                else if (randomNb <= 10)
-                {
-                    shortestDistance.TryGetValue(distances[2], out orientation);
+                    if (randomNb <= 4)
+                    {
+                        orientation = shortestDistance[0].Value;
+                    }
+                    else if (randomNb <= 9)
+                    {
+                        orientation = shortestDistance[1].Value;
+                    }
+                    else
+                    {
+                        orientation = shortestDistance[2].Value;
+                    }
                 }
                 else
                 {
-                    shortestDistance.TryGetValue(distances[3], out orientation);
+                    if (randomNb <= 4)
+                    {
+                        orientation = shortestDistance[0].Value;
+                    }
+                    else if (randomNb <= 9)
+                    {
+                        orientation = shortestDistance[1].Value;
+                    }
+                    else if (randomNb <= 12)
+                    {
+                        orientation = shortestDistance[2].Value;
+                    }
+                    else
+                    {
+                        orientation = shortestDistance[3].Value;
+                    }
                 }
                 newPosition = currentRoom.position + orientation;
 
@@ -489,6 +524,20 @@ public class DonjonGenerator : MonoBehaviour
             else if (roomNodeTmp != null)
             {
                 roomNodeTmp.isComeBackPath = true;
+
+                if (currentRoom.pathType == PathType.COMEBACK)
+                {
+                    currentRoom.AddDoor(randomDirection, roomNodeTmp, true, false);
+                }
+                else
+                {
+                    currentRoom.AddDoor(randomDirection, roomNodeTmp, false, false);
+                }
+                roomNodeTmp.AddDoor(GetInverseDoorPosition(randomDirection), currentRoom, true, true);
+
+                currentRoom.ChangeDoorState(randomDirection, Door.STATE.OPEN);
+                roomNodeTmp.ChangeDoorState(GetInverseDoorPosition(randomDirection), Door.STATE.OPEN);
+
                 currentRoom = roomNodeTmp;
             }
             else
@@ -642,7 +691,14 @@ public class DonjonGenerator : MonoBehaviour
                         map += "◆</color>";
                     }
 
-                    map += ((int)roomNode.pathType + 1) + "]\t";
+                    if (roomNode.isComeBackPath)
+                    {
+                        map += "<color=black>" + ((int)roomNode.pathType + 1) + "</color>]\t";
+                    }
+                    else
+                    {
+                        map += ((int)roomNode.pathType + 1) + "]\t";
+                    }
                 }
                 else
                 {
