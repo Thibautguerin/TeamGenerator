@@ -47419,13 +47419,13 @@ MonoBehaviour:
       canBeDoor: 0
       mustBeDoor: 0
     leftDoors:
-      canBeDoor: 0
+      canBeDoor: 1
       mustBeDoor: 1
     bottomDoors:
       canBeDoor: 1
-      mustBeDoor: 0
+      mustBeDoor: 1
     rightDoors:
-      canBeDoor: 0
+      canBeDoor: 1
       mustBeDoor: 1
 --- !u!50 &5310670680248060174
 Rigidbody2D:
