@@ -10,6 +10,12 @@ public enum DoorPosition
     BOTTOM
 }
 
+// Doors position bitset
+//1 << 0 = LEFT
+//1 << 1 = RIGHT
+//1 << 2 = TOP
+//1 << 3 = BOTTOM
+
 public enum PathType
 {
     PRINCIPAL,
@@ -32,13 +38,45 @@ public class RoomNode
     public RoomType roomType = RoomType.NORMAL;
 
     public Vector2Int position;
-    public List<DoorPosition> doorPosition = new List<DoorPosition>();
-    public List<Door.STATE> doorState = new List<Door.STATE>();
+    public uint doors;
+    public uint lastdoorAdded;
+    public List<Door.STATE> doorsState = new List<Door.STATE>(4)
+        {Door.STATE.WALL, Door.STATE.WALL, Door.STATE.WALL, Door.STATE.WALL};
 
     public LinkedListNode<RoomNode> nextSecondary;
 
     public LinkedListNode<RoomNode> previousComeBack;
     public LinkedListNode<RoomNode> nextComeBack;
+
+    public void AddDoor(DoorPosition doorPosition)
+    {
+        if ((doors & 1 << (int)doorPosition) != 1 << (int)doorPosition)
+        {
+            doors += (uint)(1 << (int)doorPosition);
+            lastdoorAdded = (uint)(1 << (int)doorPosition);
+        }
+    }
+
+    public void RemoveDoor(DoorPosition doorPosition)
+    {
+        if ((doors & 1 << (int)doorPosition) == 1 << (int)doorPosition)
+        {
+            doors -= (uint)(1 << (int)doorPosition);
+        }
+    }
+
+    public void RemoveLastDoorAdded()
+    {
+        if ((doors & lastdoorAdded) == lastdoorAdded)
+        {
+            doors -= lastdoorAdded;
+        }
+    }
+
+    public void ChangeDoorState(DoorPosition doorPosition, Door.STATE newDoorState)
+    {
+        doorsState[(int)doorPosition] = newDoorState;
+    }
 
     //public Room defaultRoom;
     //public Room modifiedRoom;
@@ -82,7 +120,6 @@ public class DonjonGenerator : MonoBehaviour
         DisplayDonjon();
     }
 
-    [ContextMenu("Generate Donjon")]
     public void Generate()
     {
         primaryRooms.Clear();
@@ -198,30 +235,14 @@ public class DonjonGenerator : MonoBehaviour
         newRoom.position = newPosition;
         newRoom.pathType = PathType.PRINCIPAL;
 
-        primaryRooms.Last.Value.doorPosition.Add(randomDirection);
-        switch (randomDirection)
-        {
-            case DoorPosition.LEFT:
-                newRoom.doorPosition.Add(DoorPosition.RIGHT);
-                break;
-            case DoorPosition.RIGHT:
-                newRoom.doorPosition.Add(DoorPosition.LEFT);
-                break;
-            case DoorPosition.TOP:
-                newRoom.doorPosition.Add(DoorPosition.BOTTOM);
-                break;
-            case DoorPosition.BOTTOM:
-                newRoom.doorPosition.Add(DoorPosition.TOP);
-                break;
-            default:
-                break;
-        }
+        primaryRooms.Last.Value.AddDoor(randomDirection);
+        newRoom.AddDoor(GetInverseDoorPosition(randomDirection));
 
         if (currentNbRoomsBetweenDoors >= nbRoomsBetweenDoors && currentNbDoors < nbDoors)
         {
             // Mettre une porte
-            primaryRooms.Last.Value.doorState.Add(Door.STATE.CLOSED);
-            newRoom.doorState.Add(Door.STATE.CLOSED);
+            primaryRooms.Last.Value.ChangeDoorState(randomDirection, Door.STATE.CLOSED);
+            newRoom.ChangeDoorState(GetInverseDoorPosition(randomDirection), Door.STATE.CLOSED);
 
             currentNbRoomsBetweenDoors = 0;
             currentNbDoors++;
@@ -234,8 +255,8 @@ public class DonjonGenerator : MonoBehaviour
         {
             // Mettre le Boss
             newRoom.roomType = RoomType.BOSS;
-            primaryRooms.Last.Value.doorState.Add(Door.STATE.OPEN);
-            newRoom.doorState.Add(Door.STATE.OPEN);
+            primaryRooms.Last.Value.ChangeDoorState(randomDirection, Door.STATE.OPEN);
+            newRoom.ChangeDoorState(GetInverseDoorPosition(randomDirection), Door.STATE.OPEN);
 
             currentNbRoomsBetweenDoors = 0;
             nbRoomsBetweenDoors = Random.Range(nbRoomsBetweenDoorsMin, nbRoomsBetweenDoorsMax);
@@ -243,8 +264,8 @@ public class DonjonGenerator : MonoBehaviour
         }
         else
         {
-            primaryRooms.Last.Value.doorState.Add(Door.STATE.OPEN);
-            newRoom.doorState.Add(Door.STATE.OPEN);
+            primaryRooms.Last.Value.ChangeDoorState(randomDirection, Door.STATE.OPEN);
+            newRoom.ChangeDoorState(GetInverseDoorPosition(randomDirection), Door.STATE.OPEN);
         }
         currentNbRoomsBetweenDoors++;
 
@@ -261,7 +282,7 @@ public class DonjonGenerator : MonoBehaviour
 
         while (currentPrincipalRoom != null)
         {
-            if (currentPrincipalRoom.Value.doorState.Contains(Door.STATE.CLOSED))
+            if (currentPrincipalRoom.Value.doorsState.Contains(Door.STATE.CLOSED))
             {
                 ++findDoor;
             }
@@ -335,8 +356,7 @@ public class DonjonGenerator : MonoBehaviour
                         // Aller à la node précédente
                         if (i > 1)
                         {
-                            currentRoom.Value.doorPosition.RemoveAt(currentRoom.Value.doorPosition.Count - 1);
-                            currentRoom.Value.doorState.RemoveAt(currentRoom.Value.doorState.Count - 1);
+                            currentRoom.Value.RemoveLastDoorAdded();
                             currentRoom.Value.nextSecondary = null;
                         }
                         secondaryPathFinded = false;
@@ -350,27 +370,11 @@ public class DonjonGenerator : MonoBehaviour
                     newRoom.position = newPosition;
                     newRoom.pathType = PathType.SECONDARY;
 
-                    currentRoom.Value.doorPosition.Add(randomDirection);
-                    switch (randomDirection)
-                    {
-                        case DoorPosition.LEFT:
-                            newRoom.doorPosition.Add(DoorPosition.RIGHT);
-                            break;
-                        case DoorPosition.RIGHT:
-                            newRoom.doorPosition.Add(DoorPosition.LEFT);
-                            break;
-                        case DoorPosition.TOP:
-                            newRoom.doorPosition.Add(DoorPosition.BOTTOM);
-                            break;
-                        case DoorPosition.BOTTOM:
-                            newRoom.doorPosition.Add(DoorPosition.TOP);
-                            break;
-                        default:
-                            break;
-                    }
+                    currentRoom.Value.AddDoor(randomDirection);
+                    newRoom.AddDoor(GetInverseDoorPosition(randomDirection));
 
-                    currentRoom.Value.doorState.Add(Door.STATE.OPEN);
-                    newRoom.doorState.Add(Door.STATE.OPEN);
+                    currentRoom.Value.ChangeDoorState(randomDirection, Door.STATE.OPEN);
+                    newRoom.ChangeDoorState(GetInverseDoorPosition(randomDirection), Door.STATE.OPEN);
 
                     if (i == randomLenght)
                     {
@@ -417,6 +421,23 @@ public class DonjonGenerator : MonoBehaviour
     public bool GenerateSecretRoom()
     {
         return true;
+    }
+
+    public DoorPosition GetInverseDoorPosition(DoorPosition doorPosition)
+    {
+        switch (doorPosition)
+        {
+            case DoorPosition.LEFT:
+                return DoorPosition.RIGHT;
+            case DoorPosition.RIGHT:
+                return DoorPosition.LEFT;
+            case DoorPosition.TOP:
+                return DoorPosition.BOTTOM;
+            case DoorPosition.BOTTOM:
+                return DoorPosition.TOP;
+            default:
+                return DoorPosition.LEFT;
+        }
     }
 
     public void DisplayDonjon()
@@ -466,7 +487,7 @@ public class DonjonGenerator : MonoBehaviour
                 {
                     map += "[";
 
-                    if (roomNode.Value.doorState.Contains(Door.STATE.CLOSED) && roomNode.Next != null && roomNode.Previous != null)
+                    if (roomNode.Value.doorsState.Contains(Door.STATE.CLOSED) && roomNode.Next != null && roomNode.Previous != null)
                     {
                         map += "<color=orange>";
                     }
