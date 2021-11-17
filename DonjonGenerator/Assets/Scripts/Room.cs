@@ -12,6 +12,9 @@ public class Room : MonoBehaviour {
 
 	public static List<Room> allRooms = new List<Room>();
 
+	public DoorsInfo info;
+
+
     void Awake()
     {
 		_tilemapGroup = GetComponentInChildren<TilemapGroup>();
@@ -65,4 +68,20 @@ public class Room : MonoBehaviour {
 		position.z = 0;
 		return (GetWorldRoomBounds().Contains(position));
 	}
+
+	[System.Serializable]
+	public struct DoorsInfo
+    {
+		public doorInfo upDoors;
+		public doorInfo leftDoors;
+		public doorInfo bottomDoors;
+		public doorInfo rightDoors;
+	}
+
+	[System.Serializable]
+	public struct doorInfo
+    {
+		public bool canBeDoor;
+		public bool mustBeDoor;
+    }
 }
