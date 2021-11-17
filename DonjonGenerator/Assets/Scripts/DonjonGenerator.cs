@@ -36,6 +36,7 @@ public class RoomNode
 {
     public PathType pathType = PathType.PRINCIPAL;
     public RoomType roomType = RoomType.NORMAL;
+    public bool isComeBackPath = false;
 
     public Vector2Int position;
     public uint doors;
@@ -48,6 +49,7 @@ public class RoomNode
 
     public RoomNode previous;
     public RoomNode next;
+
     
     public void AddDoor(DoorPosition doorPosition, RoomNode roomNode, bool changePrevNext, bool isPrevious)
     {
@@ -164,14 +166,14 @@ public class DonjonGenerator : MonoBehaviour
         if (noError)
         {
             noError = GenerateSecondaryPath();
-            if (noError)
+            /*if (noError)
             {
                 noError = GenerateComeBackPath();
                 if (noError)
                 {
                     noError = GenerateSecretRoom();
                 }
-            }
+            }*/
         }
 
         if (!noError)
@@ -210,39 +212,26 @@ public class DonjonGenerator : MonoBehaviour
             {
                 case DoorPosition.LEFT:
                     newPosition = lastRoom.position - new Vector2Int(1, 0);
-                    if (roomsDico.ContainsKey(newPosition))
-                    {
-                        nbIter++;
-                        continue;
-                    }
                     break;
                 case DoorPosition.RIGHT:
                     newPosition = lastRoom.position + new Vector2Int(1, 0);
-                    if (roomsDico.ContainsKey(newPosition))
-                    {
-                        nbIter++;
-                        continue;
-                    }
                     break;
                 case DoorPosition.TOP:
                     newPosition = lastRoom.position + new Vector2Int(0, 1);
-                    if (roomsDico.ContainsKey(newPosition))
-                    {
-                        nbIter++;
-                        continue;
-                    }
                     break;
                 case DoorPosition.BOTTOM:
                     newPosition = lastRoom.position - new Vector2Int(0, 1);
-                    if (roomsDico.ContainsKey(newPosition))
-                    {
-                        nbIter++;
-                        continue;
-                    }
                     break;
                 default:
                     break;
             }
+
+            if (roomsDico.ContainsKey(newPosition))
+            {
+                nbIter++;
+                continue;
+            }
+
             positionUsed = false;
         }
         if (positionUsed)
@@ -336,39 +325,26 @@ public class DonjonGenerator : MonoBehaviour
                         {
                             case DoorPosition.LEFT:
                                 newPosition = currentRoom.position - new Vector2Int(1, 0);
-                                if (roomsDico.ContainsKey(newPosition) || tmpRoomsDico.ContainsKey(newPosition))
-                                {
-                                    nbIter++;
-                                    continue;
-                                }
                                 break;
                             case DoorPosition.RIGHT:
                                 newPosition = currentRoom.position + new Vector2Int(1, 0);
-                                if (roomsDico.ContainsKey(newPosition) || tmpRoomsDico.ContainsKey(newPosition))
-                                {
-                                    nbIter++;
-                                    continue;
-                                }
                                 break;
                             case DoorPosition.TOP:
                                 newPosition = currentRoom.position + new Vector2Int(0, 1);
-                                if (roomsDico.ContainsKey(newPosition) || tmpRoomsDico.ContainsKey(newPosition))
-                                {
-                                    nbIter++;
-                                    continue;
-                                }
                                 break;
                             case DoorPosition.BOTTOM:
                                 newPosition = currentRoom.position - new Vector2Int(0, 1);
-                                if (roomsDico.ContainsKey(newPosition) || tmpRoomsDico.ContainsKey(newPosition))
-                                {
-                                    nbIter++;
-                                    continue;
-                                }
                                 break;
                             default:
                                 break;
                         }
+
+                        if (roomsDico.ContainsKey(newPosition) || tmpRoomsDico.ContainsKey(newPosition))
+                        {
+                            nbIter++;
+                            continue;
+                        }
+
                         positionUsed = false;
                     }
                     if (positionUsed)
@@ -430,7 +406,116 @@ public class DonjonGenerator : MonoBehaviour
 
     public bool GenerateComeBackPath()
     {
-        
+        RoomNode currentRoom = lastRoom;
+
+        while (currentRoom != firstRoom)
+        {
+            bool badPosition = true;
+            int nbIter = 0;
+            DoorPosition randomDirection = DoorPosition.BOTTOM;
+            Vector2Int newPosition = new Vector2Int();
+
+            RoomNode roomNodeTmp = null;
+
+            Dictionary<float, Vector2Int> shortestDistance = new Dictionary<float, Vector2Int>(4);
+            shortestDistance.Add(Vector2.Distance(currentRoom.position, currentRoom.position + new Vector2Int(-1, 0)), new Vector2Int(-1, 0));
+            shortestDistance.Add(Vector2.Distance(currentRoom.position, currentRoom.position + new Vector2Int(1, 0)), new Vector2Int(1, 0));
+            shortestDistance.Add(Vector2.Distance(currentRoom.position, currentRoom.position + new Vector2Int(0, 1)), new Vector2Int(0, 1));
+            shortestDistance.Add(Vector2.Distance(currentRoom.position, currentRoom.position + new Vector2Int(0, -1)), new Vector2Int(0, -1));
+
+            List<float> distances = new List<float>(4);
+            distances.Add(Vector2.Distance(currentRoom.position, currentRoom.position + new Vector2Int(-1, 0)));
+            distances.Add(Vector2.Distance(currentRoom.position, currentRoom.position + new Vector2Int(1, 0)));
+            distances.Add(Vector2.Distance(currentRoom.position, currentRoom.position + new Vector2Int(0, 1)));
+            distances.Add(Vector2.Distance(currentRoom.position, currentRoom.position + new Vector2Int(0, -1)));
+
+            distances.Sort();
+
+            while (badPosition && nbIter <= 20)
+            {
+                roomNodeTmp = null;
+                int randomNb = Random.Range(0, 12);
+
+                Vector2Int orientation = new Vector2Int();
+                if (randomNb <= 6)
+                {
+                    shortestDistance.TryGetValue(distances[0], out orientation);
+                }
+                else if (randomNb <= 8)
+                {
+                    shortestDistance.TryGetValue(distances[1], out orientation);
+                }
+                else if (randomNb <= 10)
+                {
+                    shortestDistance.TryGetValue(distances[2], out orientation);
+                }
+                else
+                {
+                    shortestDistance.TryGetValue(distances[3], out orientation);
+                }
+                newPosition = currentRoom.position + orientation;
+
+                if (orientation == new Vector2Int(-1, 0))
+                {
+                    randomDirection = DoorPosition.LEFT;
+                }
+                else if (orientation == new Vector2Int(1, 0))
+                {
+                    randomDirection = DoorPosition.RIGHT;
+                }
+                else if (orientation == new Vector2Int(0, 1))
+                {
+                    randomDirection = DoorPosition.TOP;
+                }
+                else
+                {
+                    randomDirection = DoorPosition.BOTTOM;
+                }
+
+                if ((roomsDico.TryGetValue(newPosition, out roomNodeTmp) && currentRoom == lastRoom)
+                    || (roomNodeTmp != null && roomNodeTmp.isComeBackPath))
+                {
+                    nbIter++;
+                    continue;
+                }
+
+                badPosition = false;
+            }
+            if (badPosition)
+            {
+                // Recommencer la génération
+                return false;
+            }
+            else if (roomNodeTmp != null)
+            {
+                roomNodeTmp.isComeBackPath = true;
+                currentRoom = roomNodeTmp;
+            }
+            else
+            {
+                RoomNode newRoom = new RoomNode();
+
+                newRoom.position = newPosition;
+                newRoom.pathType = PathType.COMEBACK;
+                newRoom.isComeBackPath = true;
+
+                if (currentRoom.pathType == PathType.COMEBACK)
+                {
+                    currentRoom.AddDoor(randomDirection, newRoom, true, false);
+                }
+                else
+                {
+                    currentRoom.AddDoor(randomDirection, newRoom, false, false);
+                }
+                newRoom.AddDoor(GetInverseDoorPosition(randomDirection), currentRoom, true, true);
+
+                currentRoom.ChangeDoorState(randomDirection, Door.STATE.OPEN);
+                newRoom.ChangeDoorState(GetInverseDoorPosition(randomDirection), Door.STATE.OPEN);
+
+                roomsDico.Add(newRoom.position, newRoom);
+                currentRoom = newRoom;
+            }
+        }
         return true;
     }
 
@@ -506,6 +591,10 @@ public class DonjonGenerator : MonoBehaviour
                     if (roomNode.doorsState.Contains(Door.STATE.CLOSED) && roomNode.next != null && roomNode.previous != null)
                     {
                         map += "<color=orange>";
+                    }
+                    else if (roomNode.pathType == PathType.COMEBACK)
+                    {
+                        map += "<color=black>";
                     }
                     else
                     {
