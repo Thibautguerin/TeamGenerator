@@ -128,7 +128,7 @@ public class DonjonGenerator : MonoBehaviour
     public int nbRoomsBeforeBossMin = 4;
     public int nbRoomsBeforeBossMax = 6;
     [Range(0, 100)]
-    int hardRoomProbability = 20;
+    public int hardRoomProbability = 20;
     
     Dictionary<Vector2Int, RoomNode> roomsDico = new Dictionary<Vector2Int, RoomNode>();
 

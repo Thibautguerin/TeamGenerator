@@ -80,7 +80,7 @@ public class Door : MonoBehaviour {
 	private Room GetNextRoom()
 	{
 		Vector2Int dir = Utils.OrientationToDir(_orientation);
-		Room nextRoom = Room.allRooms.Find(x => x.position == _room.position + dir);
+		Room nextRoom = Room.allRooms.Find(x => x.position == _room.position + dir/* * new Vector2Int(11, 9)*/);
 		return nextRoom;
 	} 
 
