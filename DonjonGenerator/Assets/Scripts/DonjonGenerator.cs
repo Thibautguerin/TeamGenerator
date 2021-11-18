@@ -144,14 +144,14 @@ public class DonjonGenerator : MonoBehaviour
 
     private void Awake()
     {
-        if (useSeed)
+        if (!useSeed)
         {
-            random = new System.Random(seed);
+            System.Random rand = new System.Random();
+            seed = rand.Next(int.MinValue, int.MaxValue);
+            Debug.Log("Seed: " + seed);
         }
-        else
-        {
-            random = new System.Random();
-        }
+        random = new System.Random(seed);
+
         nbRoomsAfterStartMax++;
         nbRoomsBetweenDoorsMax++;
         nbRoomsSecondaryPathMax++;
@@ -601,7 +601,7 @@ public class DonjonGenerator : MonoBehaviour
 
         foreach (KeyValuePair<Vector2Int, RoomNode> room in roomsDico)
         {
-            if (room.Value == firstRoom || room.Value == lastRoom)
+            if (room.Value == firstRoom || room.Value == lastRoom || (room.Value.roomType != RoomType.NORMAL && room.Value.roomType != RoomType.COMEBACK))
             {
                 continue;
             }
