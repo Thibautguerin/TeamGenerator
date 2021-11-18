@@ -7,6 +7,7 @@ public class Room : MonoBehaviour {
 
     public bool isStartRoom = false;
 	public Vector2Int position = Vector2Int.zero;
+	public float time;
 
 	private TilemapGroup _tilemapGroup;
 
