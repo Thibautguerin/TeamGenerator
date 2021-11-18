@@ -30,7 +30,8 @@ public enum RoomType
     NORMAL,
     HARDROOM,
     KEY,
-    BOSS
+    BOSS,
+    SECRET
 }
 
 public class RoomNode
@@ -147,7 +148,7 @@ public class DonjonGenerator : MonoBehaviour
     private void Start()
     {
         Generate();
-        //DisplayDonjon();
+        DisplayDonjon();
         SpawnRoom();
     }
 
@@ -178,7 +179,7 @@ public class DonjonGenerator : MonoBehaviour
                 noError = GenerateComeBackPath();
                 if (noError)
                 {
-                    //noError = GenerateSecretRoom();
+                    noError = GenerateSecretRoom();
                 }
             }
         }
@@ -579,6 +580,7 @@ public class DonjonGenerator : MonoBehaviour
     public bool GenerateSecretRoom()
     {
         bool secretRoomGenerated = false;
+        RoomNode secretRoom = new RoomNode();
 
         foreach (KeyValuePair<Vector2Int, RoomNode> room in roomsDico)
         {
@@ -588,33 +590,39 @@ public class DonjonGenerator : MonoBehaviour
             }
 
             bool canTryToCreateHardRoom = false;
+            Vector2Int direction = new Vector2Int();
+
             if ((room.Value.doors & 1 << 0) == 1 << 0
-                && (room.Value.doors & 1 << 1) == 1 << 1
-                && (room.Value.doors & 1 << 2) != 1 << 2
-                && (room.Value.doors & 1 << 3) != 1 << 3)
-            {
-                canTryToCreateHardRoom = true;
-            }
-            else if ((room.Value.doors & 1 << 0) != 1 << 0
-                && (room.Value.doors & 1 << 1) == 1 << 1
                 && (room.Value.doors & 1 << 2) == 1 << 2
-                && (room.Value.doors & 1 << 3) != 1 << 3)
-            {
-                canTryToCreateHardRoom = true;
-            }
-            else if ((room.Value.doors & 1 << 0) != 1 << 0
                 && (room.Value.doors & 1 << 1) != 1 << 1
+                && (room.Value.doors & 1 << 3) != 1 << 3)
+            {
+                canTryToCreateHardRoom = true;
+                direction = new Vector2Int(-1, 1);
+            }
+            else if ((room.Value.doors & 1 << 0) != 1 << 0
                 && (room.Value.doors & 1 << 2) == 1 << 2
+                && (room.Value.doors & 1 << 1) == 1 << 1
+                && (room.Value.doors & 1 << 3) != 1 << 3)
+            {
+                canTryToCreateHardRoom = true;
+                direction = new Vector2Int(1, 1);
+            }
+            else if ((room.Value.doors & 1 << 0) != 1 << 0
+                && (room.Value.doors & 1 << 2) != 1 << 2
+                && (room.Value.doors & 1 << 1) == 1 << 1
                 && (room.Value.doors & 1 << 3) == 1 << 3)
             {
                 canTryToCreateHardRoom = true;
+                direction = new Vector2Int(1, -1);
             }
             else if ((room.Value.doors & 1 << 0) == 1 << 0
-                && (room.Value.doors & 1 << 1) != 1 << 1
                 && (room.Value.doors & 1 << 2) != 1 << 2
+                && (room.Value.doors & 1 << 1) != 1 << 1
                 && (room.Value.doors & 1 << 3) == 1 << 3)
             {
                 canTryToCreateHardRoom = true;
+                direction = new Vector2Int(-1, -1);
             }
 
             if (canTryToCreateHardRoom)
@@ -624,9 +632,111 @@ public class DonjonGenerator : MonoBehaviour
                 if (random <= hardRoomProbability)
                 {
                     room.Value.roomType = RoomType.HARDROOM;
+                    if (!secretRoomGenerated && !roomsDico.ContainsKey(room.Key + direction))
+                    {
+                        int rand = Random.Range(0, 100);
+
+                        if (rand <= 33)
+                        {
+                            // Create Secret Room
+                            secretRoom.position = room.Key + direction;
+                            secretRoom.pathType = PathType.SECRET;
+                            secretRoom.roomType = RoomType.SECRET;
+
+                            RoomNode room1;
+                            RoomNode room2;
+
+                            if (roomsDico.TryGetValue(room.Key + new Vector2Int(direction.x, 0), out room1) && roomsDico.TryGetValue(room.Key + new Vector2Int(0, direction.y), out room2))
+                            {
+                                room1.AddDoor(GetDoorPosition(new Vector2Int(direction.x, 0)), secretRoom, false, false);
+                                room2.AddDoor(GetDoorPosition(new Vector2Int(0, direction.y)), secretRoom, false, false);
+                                secretRoom.AddDoor(GetInverseDoorPosition(GetDoorPosition(new Vector2Int(direction.x, 0))), room1, true, true);
+                                secretRoom.AddDoor(GetInverseDoorPosition(GetDoorPosition(new Vector2Int(0, direction.y))), room2, true, true);
+
+                                room1.ChangeDoorState(GetDoorPosition(new Vector2Int(direction.x, 0)), Door.STATE.SECRET);
+                                room2.ChangeDoorState(GetDoorPosition(new Vector2Int(0, direction.y)), Door.STATE.SECRET);
+                                secretRoom.ChangeDoorState(GetInverseDoorPosition(GetDoorPosition(new Vector2Int(direction.x, 0))), Door.STATE.SECRET);
+                                secretRoom.ChangeDoorState(GetInverseDoorPosition(GetDoorPosition(new Vector2Int(0, direction.y))), Door.STATE.SECRET);
+
+                                secretRoomGenerated = true;
+                            }
+                        }
+                    }
                 }
             }
         }
+        if (!secretRoomGenerated)
+        {
+            foreach (KeyValuePair<Vector2Int, RoomNode> room in roomsDico)
+            {
+                if (room.Value.roomType == RoomType.HARDROOM)
+                {
+                    Vector2Int direction = new Vector2Int();
+
+                    if ((room.Value.doors & 1 << 0) == 1 << 0
+                        && (room.Value.doors & 1 << 2) == 1 << 2
+                        && (room.Value.doors & 1 << 1) != 1 << 1
+                        && (room.Value.doors & 1 << 3) != 1 << 3)
+                    {
+                        direction = new Vector2Int(-1, 1);
+                    }
+                    else if ((room.Value.doors & 1 << 0) != 1 << 0
+                        && (room.Value.doors & 1 << 2) == 1 << 2
+                        && (room.Value.doors & 1 << 1) == 1 << 1
+                        && (room.Value.doors & 1 << 3) != 1 << 3)
+                    {
+                        direction = new Vector2Int(1, 1);
+                    }
+                    else if ((room.Value.doors & 1 << 0) != 1 << 0
+                        && (room.Value.doors & 1 << 2) != 1 << 2
+                        && (room.Value.doors & 1 << 1) == 1 << 1
+                        && (room.Value.doors & 1 << 3) == 1 << 3)
+                    {
+                        direction = new Vector2Int(1, -1);
+                    }
+                    else if ((room.Value.doors & 1 << 0) == 1 << 0
+                        && (room.Value.doors & 1 << 2) != 1 << 2
+                        && (room.Value.doors & 1 << 1) != 1 << 1
+                        && (room.Value.doors & 1 << 3) == 1 << 3)
+                    {
+                        direction = new Vector2Int(-1, -1);
+                    }
+
+                    if (!roomsDico.ContainsKey(room.Key + direction))
+                    {
+                        // Create Secret Room
+                        secretRoom.position = room.Key + direction;
+                        secretRoom.pathType = PathType.SECRET;
+                        secretRoom.roomType = RoomType.SECRET;
+
+                        RoomNode room1;
+                        RoomNode room2;
+
+                        if (roomsDico.TryGetValue(room.Key + new Vector2Int(direction.x, 0), out room1) && roomsDico.TryGetValue(room.Key + new Vector2Int(0, direction.y), out room2))
+                        {
+                            room1.AddDoor(GetDoorPosition(new Vector2Int(direction.x, 0)), secretRoom, false, false);
+                            room2.AddDoor(GetDoorPosition(new Vector2Int(0, direction.y)), secretRoom, false, false);
+                            secretRoom.AddDoor(GetInverseDoorPosition(GetDoorPosition(new Vector2Int(direction.x, 0))), room1, true, true);
+                            secretRoom.AddDoor(GetInverseDoorPosition(GetDoorPosition(new Vector2Int(0, direction.y))), room2, true, true);
+
+                            room1.ChangeDoorState(GetDoorPosition(new Vector2Int(direction.x, 0)), Door.STATE.SECRET);
+                            room2.ChangeDoorState(GetDoorPosition(new Vector2Int(0, direction.y)), Door.STATE.SECRET);
+                            secretRoom.ChangeDoorState(GetInverseDoorPosition(GetDoorPosition(new Vector2Int(direction.x, 0))), Door.STATE.SECRET);
+                            secretRoom.ChangeDoorState(GetInverseDoorPosition(GetDoorPosition(new Vector2Int(0, direction.y))), Door.STATE.SECRET);
+
+                            secretRoomGenerated = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (!secretRoomGenerated)
+        {
+            return false;
+        }
+        roomsDico.Add(secretRoom.position, secretRoom);
         return true;
     }
 
@@ -644,6 +754,26 @@ public class DonjonGenerator : MonoBehaviour
                 return DoorPosition.TOP;
             default:
                 return DoorPosition.LEFT;
+        }
+    }
+
+    public DoorPosition GetDoorPosition(Vector2Int direction)
+    {
+        if (direction == new Vector2Int(-1, 0))
+        {
+            return DoorPosition.LEFT;
+        }
+        else if (direction == new Vector2Int(1, 0))
+        {
+            return DoorPosition.RIGHT;
+        }
+        else if (direction == new Vector2Int(0, 1))
+        {
+            return DoorPosition.TOP;
+        }
+        else
+        {
+            return DoorPosition.BOTTOM;
         }
     }
 
@@ -712,11 +842,17 @@ public class DonjonGenerator : MonoBehaviour
                             case RoomType.NORMAL:
                                 map += "<color=yellow>";
                                 break;
+                            case RoomType.HARDROOM:
+                                map += "<color=yellow>";
+                                break;
                             case RoomType.KEY:
                                 map += "<color=blue>";
                                 break;
                             case RoomType.BOSS:
                                 map += "<color=red>";
+                                break;
+                            case RoomType.SECRET:
+                                map += "<color=purple>";
                                 break;
                             default:
                                 break;
@@ -726,21 +862,43 @@ public class DonjonGenerator : MonoBehaviour
                     if (roomNode.next != null)
                     {
                         Vector2Int dir = roomNode.next.position - roomNode.position;
-                        if (dir == new Vector2Int(1, 0))
+                        if (roomNode.roomType != RoomType.HARDROOM)
                         {
-                            map += "►</color>";
-                        }
-                        else if (dir == new Vector2Int(-1, 0))
-                        {
-                            map += "◄</color>";
-                        }
-                        else if (dir == new Vector2Int(0, 1))
-                        {
-                            map += "▲</color>";
+                            if (dir == new Vector2Int(1, 0))
+                            {
+                                map += "→</color>";
+                            }
+                            else if (dir == new Vector2Int(-1, 0))
+                            {
+                                map += "←</color>";
+                            }
+                            else if (dir == new Vector2Int(0, 1))
+                            {
+                                map += "↑</color>";
+                            }
+                            else
+                            {
+                                map += "↓</color>";
+                            }
                         }
                         else
                         {
-                            map += "▼</color>";
+                            if (dir == new Vector2Int(1, 0))
+                            {
+                                map += "►</color>";
+                            }
+                            else if (dir == new Vector2Int(-1, 0))
+                            {
+                                map += "◄</color>";
+                            }
+                            else if (dir == new Vector2Int(0, 1))
+                            {
+                                map += "▲</color>";
+                            }
+                            else
+                            {
+                                map += "▼</color>";
+                            }
                         }
                     }
                     else
