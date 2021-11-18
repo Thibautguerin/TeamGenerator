@@ -84,7 +84,8 @@ public class Player : MonoBehaviour {
     private int _keyCount;
     public int KeyCount { get { return _keyCount; } set { _keyCount = value; } }
 
-	// Dungeon position
+    // Dungeon position
+    private Room startRoom = null;
 	private Room _room = null;
 	public Room Room { get { return _room; } }
 
@@ -109,6 +110,12 @@ public class Player : MonoBehaviour {
         {
             gameObject.transform.position = new Vector3(5, 4.5f, 0);
             life = 3;
+            CameraFollow cameraFollow = Camera.main.GetComponent<CameraFollow>();
+            _room = startRoom;
+            Bounds cameraBounds = _room.GetWorldRoomBounds();
+            cameraFollow.SetBounds(cameraBounds);
+            cameraFollow.transform.position = new Vector3(5.5f, 4.5f, -10);
+            _state = STATE.IDLE;
         }
 	}
 
@@ -318,6 +325,10 @@ public class Player : MonoBehaviour {
 
 	public void EnterRoom(Room room)
 	{
+        if (startRoom == null)
+        {
+            startRoom = room;
+        }
 		_room = room;
 	}
 

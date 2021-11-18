@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public enum DoorPosition
 {
@@ -127,8 +128,13 @@ public class DonjonGenerator : MonoBehaviour
     [Header("Before Boss")]
     public int nbRoomsBeforeBossMin = 4;
     public int nbRoomsBeforeBossMax = 6;
-    [Range(0, 100)]
+    [Range(0, 100), Header("Hard Room")]
     public int hardRoomProbability = 20;
+    [Header("Seed")]
+    public bool useSeed = false;
+    public int seed = 0;
+
+    System.Random random;
     
     Dictionary<Vector2Int, RoomNode> roomsDico = new Dictionary<Vector2Int, RoomNode>();
 
@@ -138,6 +144,14 @@ public class DonjonGenerator : MonoBehaviour
 
     private void Awake()
     {
+        if (useSeed)
+        {
+            random = new System.Random(seed);
+        }
+        else
+        {
+            random = new System.Random();
+        }
         nbRoomsAfterStartMax++;
         nbRoomsBetweenDoorsMax++;
         nbRoomsSecondaryPathMax++;
@@ -160,7 +174,7 @@ public class DonjonGenerator : MonoBehaviour
         roomsDico.Clear();
 
         int currentNbDoors = 0;
-        int nbRooms = Random.Range(nbRoomsAfterStartMin, nbRoomsAfterStartMax);
+        int nbRooms = random.Next(nbRoomsAfterStartMin, nbRoomsAfterStartMax);
         int currentNbRooms = 0;
 
         bool noError = true;
@@ -216,7 +230,7 @@ public class DonjonGenerator : MonoBehaviour
 
         while (positionUsed && nbIter <= 20)
         {
-            randomDirection = (DoorPosition)Random.Range(0, 4);
+            randomDirection = (DoorPosition)random.Next(0, 4);
             switch (randomDirection)
             {
                 case DoorPosition.LEFT:
@@ -266,9 +280,9 @@ public class DonjonGenerator : MonoBehaviour
             currentNbRoomsBetweenDoors = 0;
             currentNbDoors++;
             if (currentNbDoors < nbDoors)
-                nbRoomsBetweenDoors = Random.Range(nbRoomsBetweenDoorsMin, nbRoomsBetweenDoorsMax);
+                nbRoomsBetweenDoors = random.Next(nbRoomsBetweenDoorsMin, nbRoomsBetweenDoorsMax);
             else
-                nbRoomsBetweenDoors = Random.Range(nbRoomsBeforeBossMin, nbRoomsBeforeBossMax);
+                nbRoomsBetweenDoors = random.Next(nbRoomsBeforeBossMin, nbRoomsBeforeBossMax);
         }
         else if (currentNbRoomsBetweenDoors >= nbRoomsBetweenDoors && currentNbDoors == nbDoors)
         {
@@ -278,7 +292,7 @@ public class DonjonGenerator : MonoBehaviour
             newRoom.ChangeDoorState(GetInverseDoorPosition(randomDirection), Door.STATE.OPEN);
 
             currentNbRoomsBetweenDoors = 0;
-            nbRoomsBetweenDoors = Random.Range(nbRoomsBetweenDoorsMin, nbRoomsBetweenDoorsMax);
+            nbRoomsBetweenDoors = random.Next(nbRoomsBetweenDoorsMin, nbRoomsBetweenDoorsMax);
             currentNbDoors++;
         }
         else
@@ -316,7 +330,7 @@ public class DonjonGenerator : MonoBehaviour
                 Dictionary<Vector2Int, RoomNode> tmpRoomsDico = new Dictionary<Vector2Int, RoomNode>();
 
                 RoomNode currentRoom = currentPrincipalRoom;
-                int randomLenght = Random.Range(nbRoomsSecondaryPathMin, nbRoomsSecondaryPathMax);
+                int randomLenght = random.Next(nbRoomsSecondaryPathMin, nbRoomsSecondaryPathMax);
 
                 bool secondaryPathFinded = true;
 
@@ -329,7 +343,7 @@ public class DonjonGenerator : MonoBehaviour
 
                     while (positionUsed && nbIter <= 15)
                     {
-                        randomDirection = (DoorPosition)Random.Range(0, 4);
+                        randomDirection = (DoorPosition)random.Next(0, 4);
                         switch (randomDirection)
                         {
                             case DoorPosition.LEFT:
@@ -459,7 +473,7 @@ public class DonjonGenerator : MonoBehaviour
             while (badPosition && nbIter <= 20)
             {
                 roomNodeTmp = null;
-                int randomNb = Random.Range(0, 100);
+                int randomNb = random.Next(0, 100);
 
                 Vector2Int orientation;
                 if (shortestDistance.Count == 3)
@@ -583,6 +597,7 @@ public class DonjonGenerator : MonoBehaviour
     {
         bool secretRoomGenerated = false;
         RoomNode secretRoom = new RoomNode();
+        bool canCreatHardRoom = true;
 
         foreach (KeyValuePair<Vector2Int, RoomNode> room in roomsDico)
         {
@@ -629,17 +644,25 @@ public class DonjonGenerator : MonoBehaviour
 
             if (canTryToCreateHardRoom)
             {
-                int random = Random.Range(0, 100);
+                if (!canCreatHardRoom)
+                {
+                    canCreatHardRoom = true;
+                    continue;
+                }
 
-                if (random <= hardRoomProbability)
+                int rand = random.Next(0, 100);
+
+                if (rand <= hardRoomProbability)
                 {
                     room.Value.roomType = RoomType.HARDROOM;
+                    canCreatHardRoom = false;
                     if (!secretRoomGenerated && !roomsDico.ContainsKey(room.Key + direction))
                     {
-                        int rand = Random.Range(0, 100);
+                        int rand1 = random.Next(0, 100);
 
-                        if (rand <= 33)
+                        if (rand1 <= 33)
                         {
+
                             // Create Secret Room
                             secretRoom.position = room.Key + direction;
                             secretRoom.pathType = PathType.SECRET;
