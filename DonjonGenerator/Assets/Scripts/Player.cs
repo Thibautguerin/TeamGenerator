@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Unity.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 
 /// <summary>
@@ -108,14 +109,7 @@ public class Player : MonoBehaviour {
         UpdateInputs();
         if (life <= 0)
         {
-            gameObject.transform.position = new Vector3(5, 4.5f, 0);
-            life = 3;
-            CameraFollow cameraFollow = Camera.main.GetComponent<CameraFollow>();
-            _room = startRoom;
-            Bounds cameraBounds = _room.GetWorldRoomBounds();
-            cameraFollow.SetBounds(cameraBounds);
-            cameraFollow.transform.position = new Vector3(5.5f, 4.5f, -10);
-            _state = STATE.IDLE;
+            SceneManager.LoadScene("SampleScene");
         }
 	}
 
