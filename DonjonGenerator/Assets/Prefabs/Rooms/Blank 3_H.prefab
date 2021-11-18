@@ -470,13 +470,13 @@ MonoBehaviour:
       mustBeDoor: 0
     leftDoors:
       canBeDoor: 1
-      mustBeDoor: 0
+      mustBeDoor: 1
     bottomDoors:
-      canBeDoor: 0
+      canBeDoor: 1
       mustBeDoor: 1
     rightDoors:
       canBeDoor: 1
-      mustBeDoor: 0
+      mustBeDoor: 1
 --- !u!50 &3139156377841335843
 Rigidbody2D:
   serializedVersion: 4

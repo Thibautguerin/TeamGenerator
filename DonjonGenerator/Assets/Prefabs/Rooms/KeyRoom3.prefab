@@ -298,7 +298,7 @@ MonoBehaviour:
   Collider2DType: 0
   ShowColliderNormals: 1
   ColliderDisplayMode: 2
-  IsUndoEnabled: 0
+  IsUndoEnabled: 1
   SortOrder: 0
   m_sortingLayer: 0
   m_sortingLayerName: Default
@@ -47563,17 +47563,17 @@ MonoBehaviour:
   type: 2
   info:
     upDoors:
-      canBeDoor: 0
+      canBeDoor: 1
       mustBeDoor: 0
     leftDoors:
       canBeDoor: 1
       mustBeDoor: 0
     bottomDoors:
-      canBeDoor: 0
+      canBeDoor: 1
       mustBeDoor: 0
     rightDoors:
-      canBeDoor: 0
-      mustBeDoor: 1
+      canBeDoor: 1
+      mustBeDoor: 0
 --- !u!50 &4417116139367836413
 Rigidbody2D:
   serializedVersion: 4

@@ -208,13 +208,13 @@ MonoBehaviour:
   type: 1
   info:
     upDoors:
-      canBeDoor: 0
+      canBeDoor: 1
       mustBeDoor: 1
     leftDoors:
       canBeDoor: 0
       mustBeDoor: 0
     bottomDoors:
-      canBeDoor: 0
+      canBeDoor: 1
       mustBeDoor: 1
     rightDoors:
       canBeDoor: 0

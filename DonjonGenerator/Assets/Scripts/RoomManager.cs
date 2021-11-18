@@ -30,12 +30,12 @@ public class RoomManager : MonoBehaviour
                     break;
             }
         }
-        RoomNode room = new RoomNode();
-        room.roomType = RoomType.NORMAL;
-        room.doors = 1 << 0 + 1 << 2;
-        room.doorsState = new List<Door.STATE>(4)
-        {Door.STATE.CLOSED, Door.STATE.CLOSED, Door.STATE.CLOSED, Door.STATE.CLOSED};
-        FindRoomfromNode(room);
+        //RoomNode room = new RoomNode();
+        //room.roomType = RoomType.NORMAL;
+        //room.doors = 1 << 0 + 1 << 2;
+        //room.doorsState = new List<Door.STATE>(4)
+        //{Door.STATE.CLOSED, Door.STATE.CLOSED, Door.STATE.CLOSED, Door.STATE.CLOSED};
+        //FindRoomfromNode(room);
     }
 
     public Room FindRoomfromNode(RoomNode node)

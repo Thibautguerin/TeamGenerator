@@ -61,10 +61,12 @@ public class Room : MonoBehaviour {
 
 	void SetupBit()
     {
+		canBit = 0;
 		canBit += (uint)(info.leftDoors.canBeDoor ? 1 : 0) << 0;
 		canBit += (uint)(info.rightDoors.canBeDoor ? 1 : 0) << 1;
 		canBit += (uint)(info.upDoors.canBeDoor ? 1 : 0) << 2;
 		canBit += (uint)(info.bottomDoors.canBeDoor ? 1 : 0) << 3;
+		mustBit = 0;
 		mustBit += (uint)(info.leftDoors.mustBeDoor ? 1 : 0) << 0;
 		mustBit += (uint)(info.rightDoors.mustBeDoor ? 1 : 0) << 1;
 		mustBit += (uint)(info.upDoors.mustBeDoor ? 1 : 0) << 2;

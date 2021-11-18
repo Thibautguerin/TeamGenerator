@@ -129,6 +129,7 @@ public class DonjonGenerator : MonoBehaviour
 
     RoomNode firstRoom;
     RoomNode lastRoom;
+    RoomManager roomM;
 
     private void Awake()
     {
@@ -136,12 +137,14 @@ public class DonjonGenerator : MonoBehaviour
         nbRoomsBetweenDoorsMax++;
         nbRoomsSecondaryPathMax++;
         nbRoomsBeforeBossMax++;
+        roomM = GetComponent<RoomManager>();
     }
 
     private void Start()
     {
         Generate();
-        DisplayDonjon();
+        //DisplayDonjon();
+        SpawnRoom();
     }
 
     public void Generate()
@@ -712,6 +715,17 @@ public class DonjonGenerator : MonoBehaviour
         Debug.Log(map);
     }
 
+    private void SpawnRoom()
+    {
+        foreach (var item in roomsDico)
+        {
+            Room temp = roomM.FindRoomfromNode(item.Value);
+            Vector3Int position = (Vector3Int)item.Key;
+            position.x *= 11;
+            position.y *= 9;
+            temp.transform.position = position;
+        }
+    }
     // Pour le chemin de retour -> probabilité qui augment pour aller vers la salle start
 
     // fermer random les salles principales et secondaires (1 chance sur 2 ou 3)
