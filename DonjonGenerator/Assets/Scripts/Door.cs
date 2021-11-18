@@ -40,9 +40,10 @@ public class Door : MonoBehaviour {
         
 	}
 
-    public void SetRotation(Utils.ORIENTATION _orientation)
+    public void SetRotation(Utils.ORIENTATION orientation)
     {
-        transform.rotation = Quaternion.Euler(0, 0, -Utils.OrientationToAngle(_orientation));
+        _orientation = orientation;
+        transform.rotation = Quaternion.Euler(0, 0, -Utils.OrientationToAngle(orientation));
     }
 
     public void OnTriggerEnter2D(Collider2D collision)
