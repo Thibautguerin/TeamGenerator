@@ -18,6 +18,8 @@ public class Room : MonoBehaviour {
 	private uint canBit =0;
 	private uint mustBit=0;
 	private List<Door> doorList = new List<Door>();
+	[HideInInspector]
+	public bool isComeBack = false;
 
 
     void Awake()
@@ -144,6 +146,17 @@ public class Room : MonoBehaviour {
 			doorList[doorIndex].SetState(doorsState[i]);
 			doorIndex++;
 		}
+    }
+
+	public void UpdateRoomAfterBoss(bool shouldClose)
+    {
+        foreach (var item in doorList)
+        {
+			if (shouldClose && item.State == Door.STATE.OPEN)
+				item.SetState(Door.STATE.BLOCKED);
+			if (item.State == Door.STATE.WEAKENED)
+				item.SetState(Door.STATE.OPEN);
+        }
     }
 
 	[System.Serializable]

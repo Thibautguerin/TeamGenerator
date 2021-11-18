@@ -5,6 +5,7 @@ using UnityEngine;
 public class RoomManager : MonoBehaviour
 {
     public List<Room> Rooms = new List<Room>();
+    public float closePercent = 0.8f;
     private List<Room> StartRooms = new List<Room>();
     private List<Room> NormalRooms = new List<Room>();
     private List<Room> KeyRooms = new List<Room>();
@@ -12,6 +13,8 @@ public class RoomManager : MonoBehaviour
     private List<Room> HardRooms = new List<Room>();
     private List<Room> SecretRooms = new List<Room>();
     private List<Room> ComeBackRooms = new List<Room>();
+
+    private Dictionary<Vector2Int, Room> dico = new Dictionary<Vector2Int, Room>();
 
     private void Awake()
     {
@@ -85,6 +88,21 @@ public class RoomManager : MonoBehaviour
         int r = Random.Range(0, possibleRoom.Count - 1);
         Room instRoom = Instantiate(possibleRoom[r]);
         instRoom.InitDoor(node.doorsState);
+        instRoom.isComeBack = node.isComeBackPath;
+        dico.Add(node.position, instRoom);
         return instRoom;
+    }
+
+    public void UpdateAllRoom()
+    {
+        foreach (var item in dico)
+        {
+            if (item.Value.isComeBack)
+                item.Value.UpdateRoomAfterBoss(false);
+            else
+            {
+                item.Value.UpdateRoomAfterBoss(Random.value < closePercent);
+            }
+        }
     }
 }

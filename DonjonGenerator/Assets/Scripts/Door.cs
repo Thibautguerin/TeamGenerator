@@ -10,7 +10,8 @@ public class Door : MonoBehaviour {
         CLOSED = 1,
         WALL = 2,
         SECRET = 3,
-        WEAKENED = 4
+        WEAKENED = 4,
+        BLOCKED = 5
     }
 
     public const string PLAYER_NAME = "Player";
@@ -25,6 +26,7 @@ public class Door : MonoBehaviour {
     public GameObject wallGo = null;
     public GameObject secretGo = null;
     public GameObject weakenedGo = null;
+    public GameObject blockedGO = null;
 
 	private Room _room = null;
 
@@ -89,6 +91,7 @@ public class Door : MonoBehaviour {
         if (wallGo) { wallGo.SetActive(false); }
         if (secretGo) { secretGo.SetActive(false); }
         if (weakenedGo) { weakenedGo.SetActive(false); }
+        if (blockedGO) blockedGO.SetActive(false);
         _state = state;
         switch(_state)
         {
@@ -106,6 +109,9 @@ public class Door : MonoBehaviour {
                 break;
             case STATE.WEAKENED:
                 if (weakenedGo) { weakenedGo.SetActive(true); }
+                break;
+            case STATE.BLOCKED:
+                if (blockedGO) blockedGO.SetActive(true);
                 break;
         }
     }
