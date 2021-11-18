@@ -43,19 +43,6 @@ public class Door : MonoBehaviour {
             _orientation = dir.y > 0 ? Utils.ORIENTATION.NORTH : Utils.ORIENTATION.SOUTH;
         }
         transform.rotation = Quaternion.Euler(0, 0, -Utils.OrientationToAngle(_orientation));
-		if(closedGo.gameObject.activeSelf)
-		{
-			SetState(STATE.CLOSED);
-		} else if (openGo.gameObject.activeSelf)
-		{
-			SetState(STATE.OPEN);
-		} else if (wallGo.gameObject.activeSelf)
-		{
-			SetState(STATE.WALL);
-		} else if (secretGo.gameObject.activeSelf)
-		{
-			SetState(STATE.SECRET);
-		}
 	}
 
     public void OnTriggerEnter2D(Collider2D collision)

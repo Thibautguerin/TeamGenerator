@@ -724,6 +724,7 @@ public class DonjonGenerator : MonoBehaviour
             position.x *= 11;
             position.y *= 9;
             temp.transform.position = position;
+            temp.position = item.Key;
         }
     }
     // Pour le chemin de retour -> probabilité qui augment pour aller vers la salle start

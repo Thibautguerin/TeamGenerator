@@ -60,7 +60,7 @@ public class RoomManager : MonoBehaviour
                 possibleRoom.Add(room);
         }
         if (possibleRoom.Count == 0)
-            Debug.LogError("Room not found");
+            Debug.LogError("Room not found "+ node.doors);
         int r = Random.Range(0, possibleRoom.Count - 1);
         Room instRoom = Instantiate(possibleRoom[r]);
         instRoom.InitDoor(node.doorsState);
