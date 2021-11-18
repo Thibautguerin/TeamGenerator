@@ -31,7 +31,8 @@ public enum RoomType
     KEY,
     BOSS,
     HARDROOM,
-    SECRET
+    SECRET,
+    COMEBACK
 }
 
 public class RoomNode
@@ -555,6 +556,7 @@ public class DonjonGenerator : MonoBehaviour
 
                 newRoom.position = newPosition;
                 newRoom.pathType = PathType.COMEBACK;
+                newRoom.roomType = RoomType.COMEBACK;
                 newRoom.isComeBackPath = true;
 
                 if (currentRoom.pathType == PathType.COMEBACK)
