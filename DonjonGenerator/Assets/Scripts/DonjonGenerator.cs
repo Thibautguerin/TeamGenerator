@@ -28,6 +28,7 @@ public enum RoomType
 {
     START,
     NORMAL,
+    HARDROOM,
     KEY,
     BOSS
 }
@@ -124,6 +125,8 @@ public class DonjonGenerator : MonoBehaviour
     [Header("Before Boss")]
     public int nbRoomsBeforeBossMin = 4;
     public int nbRoomsBeforeBossMax = 6;
+    [Range(0, 100)]
+    int hardRoomProbability = 20;
     
     Dictionary<Vector2Int, RoomNode> roomsDico = new Dictionary<Vector2Int, RoomNode>();
 
@@ -137,6 +140,7 @@ public class DonjonGenerator : MonoBehaviour
         nbRoomsBetweenDoorsMax++;
         nbRoomsSecondaryPathMax++;
         nbRoomsBeforeBossMax++;
+        hardRoomProbability--;
         roomM = GetComponent<RoomManager>();
     }
 
@@ -174,7 +178,7 @@ public class DonjonGenerator : MonoBehaviour
                 noError = GenerateComeBackPath();
                 if (noError)
                 {
-                    noError = GenerateSecretRoom();
+                    //noError = GenerateSecretRoom();
                 }
             }
         }
@@ -574,6 +578,55 @@ public class DonjonGenerator : MonoBehaviour
 
     public bool GenerateSecretRoom()
     {
+        bool secretRoomGenerated = false;
+
+        foreach (KeyValuePair<Vector2Int, RoomNode> room in roomsDico)
+        {
+            if (room.Value == firstRoom || room.Value == lastRoom)
+            {
+                continue;
+            }
+
+            bool canTryToCreateHardRoom = false;
+            if ((room.Value.doors & 1 << 0) == 1 << 0
+                && (room.Value.doors & 1 << 1) == 1 << 1
+                && (room.Value.doors & 1 << 2) != 1 << 2
+                && (room.Value.doors & 1 << 3) != 1 << 3)
+            {
+                canTryToCreateHardRoom = true;
+            }
+            else if ((room.Value.doors & 1 << 0) != 1 << 0
+                && (room.Value.doors & 1 << 1) == 1 << 1
+                && (room.Value.doors & 1 << 2) == 1 << 2
+                && (room.Value.doors & 1 << 3) != 1 << 3)
+            {
+                canTryToCreateHardRoom = true;
+            }
+            else if ((room.Value.doors & 1 << 0) != 1 << 0
+                && (room.Value.doors & 1 << 1) != 1 << 1
+                && (room.Value.doors & 1 << 2) == 1 << 2
+                && (room.Value.doors & 1 << 3) == 1 << 3)
+            {
+                canTryToCreateHardRoom = true;
+            }
+            else if ((room.Value.doors & 1 << 0) == 1 << 0
+                && (room.Value.doors & 1 << 1) != 1 << 1
+                && (room.Value.doors & 1 << 2) != 1 << 2
+                && (room.Value.doors & 1 << 3) == 1 << 3)
+            {
+                canTryToCreateHardRoom = true;
+            }
+
+            if (canTryToCreateHardRoom)
+            {
+                int random = Random.Range(0, 100);
+
+                if (random <= hardRoomProbability)
+                {
+                    room.Value.roomType = RoomType.HARDROOM;
+                }
+            }
+        }
         return true;
     }
 
