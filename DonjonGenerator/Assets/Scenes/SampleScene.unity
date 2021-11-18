@@ -677,6 +677,34 @@ PrefabInstance:
       propertyPath: nbDoorsBeforeTheBoss
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 8233812886312035691, guid: cdc2ce98738eeb9419a85701e166ed90, type: 3}
+      propertyPath: nbRoomsAfterStartMax
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8233812886312035691, guid: cdc2ce98738eeb9419a85701e166ed90, type: 3}
+      propertyPath: nbRoomsAfterStartMin
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8233812886312035691, guid: cdc2ce98738eeb9419a85701e166ed90, type: 3}
+      propertyPath: nbRoomsBeforeBossMax
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8233812886312035691, guid: cdc2ce98738eeb9419a85701e166ed90, type: 3}
+      propertyPath: nbRoomsBeforeBossMin
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8233812886312035691, guid: cdc2ce98738eeb9419a85701e166ed90, type: 3}
+      propertyPath: nbRoomsBetweenDoorsMax
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8233812886312035691, guid: cdc2ce98738eeb9419a85701e166ed90, type: 3}
+      propertyPath: nbRoomsSecondaryPathMax
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8233812886312035691, guid: cdc2ce98738eeb9419a85701e166ed90, type: 3}
+      propertyPath: nbRoomsSecondaryPathMin
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cdc2ce98738eeb9419a85701e166ed90, type: 3}
 --- !u!1 &3299474491544718768 stripped
@@ -759,3 +787,4 @@ MonoBehaviour:
   - {fileID: 4074109937695535999, guid: 57e0d0ec42242c847b585f4242e3fa4d, type: 3}
   - {fileID: 3970118868029816891, guid: 3ad1b94b856b54f41acec270a53ba705, type: 3}
   - {fileID: 5837500346369448536, guid: 14425d22d3ead644eb6af80f3e67d719, type: 3}
+  closePercent: 0.8
