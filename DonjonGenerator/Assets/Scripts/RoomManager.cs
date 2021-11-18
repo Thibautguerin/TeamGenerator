@@ -14,8 +14,6 @@ public class RoomManager : MonoBehaviour
     private List<Room> SecretRooms = new List<Room>();
     private List<Room> ComeBackRooms = new List<Room>();
 
-    private Dictionary<Vector2Int, Room> dico = new Dictionary<Vector2Int, Room>();
-
     private void Awake()
     {
         foreach (var item in Rooms)
@@ -89,19 +87,18 @@ public class RoomManager : MonoBehaviour
         Room instRoom = Instantiate(possibleRoom[r]);
         instRoom.InitDoor(node.doorsState);
         instRoom.isComeBack = node.isComeBackPath;
-        dico.Add(node.position, instRoom);
         return instRoom;
     }
 
     public void UpdateAllRoom()
     {
-        foreach (var item in dico)
+        foreach (var item in Room.allRooms)
         {
-            if (item.Value.isComeBack)
-                item.Value.UpdateRoomAfterBoss(false);
+            if (item.isComeBack)
+                item.UpdateRoomAfterBoss(false);
             else
             {
-                item.Value.UpdateRoomAfterBoss(Random.value < closePercent);
+                item.UpdateRoomAfterBoss(Random.value < closePercent);
             }
         }
     }
