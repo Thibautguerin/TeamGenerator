@@ -596,6 +596,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isStartRoom: 0
   position: {x: 1, y: 0}
+  time: 0
   type: 1
   info:
     upDoors:
