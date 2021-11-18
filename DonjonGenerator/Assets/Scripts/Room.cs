@@ -33,7 +33,7 @@ public class Room : MonoBehaviour {
 			if ((canBit & 1 << i) == 0)
 				continue;
 			Door doorToAdd = doors[0];
-			for (int j = 1; j < 4; j++)
+			for (int j = 1; j < doors.Length; j++)
 			{
 				switch (i)
 				{
@@ -46,11 +46,11 @@ public class Room : MonoBehaviour {
 							doorToAdd = doors[j];
 						break;
 					case 2:
-						if (doors[j].transform.position.y > doorToAdd.transform.position.x)
+						if (doors[j].transform.position.y > doorToAdd.transform.position.y)
 							doorToAdd = doors[j];
 						break;
 					case 3:
-						if (doors[j].transform.position.y < doorToAdd.transform.position.x)
+						if (doors[j].transform.position.y < doorToAdd.transform.position.y)
 							doorToAdd = doors[j];
 						break;
 				}
@@ -132,10 +132,11 @@ public class Room : MonoBehaviour {
 
 	public void InitDoor(List<Door.STATE> doorsState)
     {
+		SetupBit();
 		SetupDoor();
 
 		int doorIndex = 0;
-        for (int i = 0; i < doorsState.Count; i++)
+		for (int i = 0; i < doorsState.Count; i++)
         {
 			if ((canBit & 1 << i) == 0)
 				continue;
