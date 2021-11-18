@@ -1,6 +1,7 @@
 ﻿using CreativeSpore.SuperTilemapEditor;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Room : MonoBehaviour {
@@ -30,13 +31,13 @@ public class Room : MonoBehaviour {
 
 	void SetupDoor()
     {
-		Door[] doors = GetComponentsInChildren<Door>();
+		List<Door> doors = GetComponentsInChildren<Door>().ToList();
 		for (int i = 0; i < 4; i++)
 		{
 			if ((canBit & 1 << i) == 0)
 				continue;
 			Door doorToAdd = doors[0];
-			for (int j = 1; j < doors.Length; j++)
+			for (int j = 1; j < doors.Count; j++)
 			{
 				switch (i)
 				{
@@ -58,7 +59,25 @@ public class Room : MonoBehaviour {
 						break;
 				}
 			}
+			Utils.ORIENTATION orientation = Utils.ORIENTATION.NONE;
+            switch (i)
+            {
+				case 0:
+					orientation = Utils.ORIENTATION.WEST;
+					break;
+				case 1:
+					orientation = Utils.ORIENTATION.EAST;
+					break;
+				case 2:
+					orientation = Utils.ORIENTATION.NORTH;
+					break;
+				case 3:
+					orientation = Utils.ORIENTATION.SOUTH;
+					break;
+            }
+			doorToAdd.SetRotation(orientation);
 			doorList.Add(doorToAdd);
+			doors.Remove(doorToAdd);
 		}
 	}
 
