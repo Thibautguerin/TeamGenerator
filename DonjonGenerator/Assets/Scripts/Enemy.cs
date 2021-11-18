@@ -61,6 +61,10 @@ public class Enemy : MonoBehaviour
     private Vector2 _direction = Vector2.zero;
     private MovementParameters _currentMovement = null;
 
+    [Header("Rotation")]
+    public bool lootAtPlayer = true;
+    public float autoRotationSpeed = 15;
+
     // Attack attributes
     [Header("Attack")]
     public GameObject attackPrefab = null;
@@ -69,6 +73,10 @@ public class Enemy : MonoBehaviour
 	public float attackDistance = 0.5f;
     public float attackCooldown = 1.0f;
     public ORIENTATION orientation = ORIENTATION.FREE;
+
+    [Header("Defense")]
+    public bool canBeStuned = true;
+    public float knockbackResistance;
 
     private float lastAttackTime = float.MinValue;
 
@@ -162,6 +170,8 @@ public class Enemy : MonoBehaviour
     // Set state exits previous state, change state then enter new state. Instructions related to exiting and entering a state are in the two "switch(_state){...}" of this method.
     private void SetState(STATE state)
     {
+        if (state == STATE.STUNNED && !canBeStuned)
+            return;
         // Exit previous state
         // switch (_state)
         //{
@@ -193,7 +203,10 @@ public class Enemy : MonoBehaviour
             // If direction magnitude > 0, Accelerate in direction, then clamp velocity to max speed. Do not apply friction if character is moving toward a direction.
             _body.velocity += _direction * _currentMovement.acceleration * Time.fixedDeltaTime;
             _body.velocity = Vector2.ClampMagnitude(_body.velocity, _currentMovement.speedMax);
-            transform.eulerAngles = new Vector3(0.0f, 0.0f, ComputeOrientationAngle(_direction));
+            if (lootAtPlayer)
+                transform.eulerAngles = new Vector3(0.0f, 0.0f, ComputeOrientationAngle(_direction));
+            else
+                transform.eulerAngles += new Vector3(0, 0, autoRotationSpeed * Time.fixedDeltaTime); 
         }
         else {
             // If direction magnitude == 0, Apply friction
@@ -256,7 +269,12 @@ public class Enemy : MonoBehaviour
     private IEnumerator ApplyKnockBackCoroutine(float duration, Vector3 velocity)
     {
         SetState(STATE.STUNNED);
-        _body.velocity = velocity;
+        float magnitude = velocity.magnitude - knockbackResistance;
+        if (magnitude > 0)
+        {
+            velocity /= velocity.magnitude / knockbackResistance;
+            _body.velocity = velocity;
+        }
         yield return new WaitForSeconds(duration);
         SetState(STATE.IDLE);
     }

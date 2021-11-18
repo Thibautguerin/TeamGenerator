@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3061304261199345294}
   - component: {fileID: 3061304261199345293}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -92,7 +92,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3061304261252655526}
   - component: {fileID: 3061304261252655525}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: AttackSpawnPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -176,7 +176,7 @@ GameObject:
   - component: {fileID: 3061304262239656672}
   - component: {fileID: 3061304262239656674}
   - component: {fileID: 3061304262239656673}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -275,7 +275,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3061304262789139554}
   - component: {fileID: 3061304262789139553}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Collider
   m_TagString: Player
   m_Icon: {fileID: 0}
