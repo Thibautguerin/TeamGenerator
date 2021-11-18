@@ -150,8 +150,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef68b37496ef62c449621d0c55f8ba31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  life: 3
-  invincibilityDuration: 1
+  life: 2
+  invincibilityDuration: 0.5
   invincibilityBlinkPeriod: 0.2
   hitLayers:
     serializedVersion: 2
@@ -168,9 +168,9 @@ MonoBehaviour:
     friction: 8
   attackPrefab: {fileID: 2154987669678790336, guid: 571a4010047283148b5365a0a964e25a, type: 3}
   attackSpawnPoint: {fileID: 7002898656866225823}
-  attackWarmUp: 0
+  attackWarmUp: 1
   attackDistance: 500
-  attackCooldown: 1
+  attackCooldown: 2
   orientation: 0
 --- !u!61 &7543272591899400078
 BoxCollider2D:

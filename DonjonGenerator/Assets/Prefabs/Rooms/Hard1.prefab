@@ -268,7 +268,7 @@ MonoBehaviour:
   isStartRoom: 0
   position: {x: 1, y: 0}
   time: 0
-  type: 4
+  type: 6
   info:
     upDoors:
       canBeDoor: 1
@@ -282,6 +282,7 @@ MonoBehaviour:
     rightDoors:
       canBeDoor: 1
       mustBeDoor: 0
+  isComeBack: 0
 --- !u!50 &2918183565119670445
 Rigidbody2D:
   serializedVersion: 4
