@@ -105,6 +105,11 @@ public class Player : MonoBehaviour {
     private void Update () {
         UpdateState();
         UpdateInputs();
+        if (life <= 0)
+        {
+            gameObject.transform.position = new Vector3(5, 4.5f, 0);
+            life = 3;
+        }
 	}
 
     // Update physics on FixedUpdate (FixedUpdate can be called multiple times a frame).
