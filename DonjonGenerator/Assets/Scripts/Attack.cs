@@ -9,12 +9,18 @@ public class Attack : MonoBehaviour {
     public float knockbackSpeed = 3;
     public float knockbackDuration = 0.5f;
 	public LayerMask destroyOnHit;
+	public float speed = 0;
 
 	[System.NonSerialized]
     public GameObject owner;
-	
-	// Update is called once per frame
-	void Update () {
+
+    private void Start()
+    {
+		GetComponent<Rigidbody2D>().velocity = transform.right * speed;
+    }
+
+    // Update is called once per frame
+    void Update () {
 		if (duration <= 0.0f)
 			return;
 
