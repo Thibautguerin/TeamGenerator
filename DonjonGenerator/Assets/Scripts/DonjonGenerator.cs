@@ -136,8 +136,10 @@ public class DonjonGenerator : MonoBehaviour
     public bool useSeed = false;
     public int seed = 0;
 
-    System.Random random;
-    
+    [HideInInspector]
+    public System.Random random;
+    public RandomState randomSave;
+
     Dictionary<Vector2Int, RoomNode> roomsDico = new Dictionary<Vector2Int, RoomNode>();
 
     RoomNode firstRoom;
@@ -969,6 +971,14 @@ public class DonjonGenerator : MonoBehaviour
 
     public void SpawnRoom()
     {
+        if (randomSave.State == new RandomState().State)
+        {
+            randomSave = random.Save();
+        }
+        else
+        {
+            random = randomSave.Restore();
+        }
         foreach (var item in roomsDico)
         {
             Room temp = roomM.FindRoomfromNode(item.Value);

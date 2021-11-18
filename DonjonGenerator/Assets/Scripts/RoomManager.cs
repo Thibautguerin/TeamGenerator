@@ -83,7 +83,7 @@ public class RoomManager : MonoBehaviour
         }
         if (possibleRoom.Count == 0)
             Debug.LogError("Room not found door : "+ node.doors+" type : "+node.roomType);
-        int r = Random.Range(0, possibleRoom.Count - 1);
+        int r = DonjonGenerator.Instance.random.Next(0, possibleRoom.Count - 1);
         Room instRoom = Instantiate(possibleRoom[r]);
         instRoom.InitDoor(node.doorsState);
         instRoom.isComeBack = node.isComeBackPath;
