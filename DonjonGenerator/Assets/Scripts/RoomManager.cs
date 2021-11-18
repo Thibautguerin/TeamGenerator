@@ -9,6 +9,8 @@ public class RoomManager : MonoBehaviour
     private List<Room> NormalRooms = new List<Room>();
     private List<Room> KeyRooms = new List<Room>();
     private List<Room> BossRooms = new List<Room>();
+    private List<Room> HardRooms = new List<Room>();
+    private List<Room> SecretRooms = new List<Room>();
 
     private void Awake()
     {
@@ -27,6 +29,12 @@ public class RoomManager : MonoBehaviour
                     break;
                 case RoomType.BOSS:
                     BossRooms.Add(item);
+                    break;
+                case RoomType.HARDROOM:
+                    HardRooms.Add(item);
+                    break;
+                case RoomType.SECRET:
+                    SecretRooms.Add(item);
                     break;
             }
         }
@@ -52,6 +60,12 @@ public class RoomManager : MonoBehaviour
                 break;
             case RoomType.BOSS:
                 selectedRoom = BossRooms;
+                break;
+            case RoomType.HARDROOM:
+                selectedRoom = HardRooms;
+                break;
+            case RoomType.SECRET:
+                selectedRoom = SecretRooms;
                 break;
         }
         foreach (Room room in selectedRoom)

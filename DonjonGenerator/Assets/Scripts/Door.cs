@@ -24,6 +24,7 @@ public class Door : MonoBehaviour {
     public GameObject openGo = null;
     public GameObject wallGo = null;
     public GameObject secretGo = null;
+    public GameObject weakenedGo = null;
 
 	private Room _room = null;
 
@@ -87,6 +88,7 @@ public class Door : MonoBehaviour {
         if (openGo) { openGo.SetActive(false); }
         if (wallGo) { wallGo.SetActive(false); }
         if (secretGo) { secretGo.SetActive(false); }
+        if (weakenedGo) { weakenedGo.SetActive(false); }
         _state = state;
         switch(_state)
         {
@@ -101,6 +103,9 @@ public class Door : MonoBehaviour {
                 break;
             case STATE.SECRET:
                 if (secretGo) { secretGo.SetActive(true); }
+                break;
+            case STATE.WEAKENED:
+                if (weakenedGo) { weakenedGo.SetActive(true); }
                 break;
         }
     }

@@ -28,9 +28,9 @@ public enum RoomType
 {
     START,
     NORMAL,
-    HARDROOM,
     KEY,
     BOSS,
+    HARDROOM,
     SECRET
 }
 
@@ -534,18 +534,18 @@ public class DonjonGenerator : MonoBehaviour
             {
                 roomNodeTmp.isComeBackPath = true;
 
+                roomNodeTmp.AddDoor(GetInverseDoorPosition(randomDirection), currentRoom, true, true);
                 if (currentRoom.pathType == PathType.COMEBACK)
                 {
                     currentRoom.AddDoor(randomDirection, roomNodeTmp, true, false);
+                    currentRoom.ChangeDoorState(randomDirection, Door.STATE.WEAKENED);
+                    roomNodeTmp.ChangeDoorState(GetInverseDoorPosition(randomDirection), Door.STATE.WEAKENED);
                 }
-                else
+                else if (currentRoom.doorsState[(int)randomDirection] == Door.STATE.WALL || roomNodeTmp.doorsState[(int)GetInverseDoorPosition(randomDirection)] == Door.STATE.WALL)
                 {
-                    currentRoom.AddDoor(randomDirection, roomNodeTmp, false, false);
+                    currentRoom.ChangeDoorState(randomDirection, Door.STATE.WEAKENED);
+                    roomNodeTmp.ChangeDoorState(GetInverseDoorPosition(randomDirection), Door.STATE.WEAKENED);
                 }
-                roomNodeTmp.AddDoor(GetInverseDoorPosition(randomDirection), currentRoom, true, true);
-
-                currentRoom.ChangeDoorState(randomDirection, Door.STATE.WEAKENED);
-                roomNodeTmp.ChangeDoorState(GetInverseDoorPosition(randomDirection), Door.STATE.WEAKENED);
 
                 currentRoom = roomNodeTmp;
             }
@@ -648,15 +648,15 @@ public class DonjonGenerator : MonoBehaviour
 
                             if (roomsDico.TryGetValue(room.Key + new Vector2Int(direction.x, 0), out room1) && roomsDico.TryGetValue(room.Key + new Vector2Int(0, direction.y), out room2))
                             {
-                                room1.AddDoor(GetDoorPosition(new Vector2Int(direction.x, 0)), secretRoom, false, false);
-                                room2.AddDoor(GetDoorPosition(new Vector2Int(0, direction.y)), secretRoom, false, false);
-                                secretRoom.AddDoor(GetInverseDoorPosition(GetDoorPosition(new Vector2Int(direction.x, 0))), room1, true, true);
-                                secretRoom.AddDoor(GetInverseDoorPosition(GetDoorPosition(new Vector2Int(0, direction.y))), room2, true, true);
+                                room1.AddDoor(GetDoorPosition(new Vector2Int(0, direction.y)), secretRoom, false, false);
+                                room2.AddDoor(GetDoorPosition(new Vector2Int(direction.x, 0)), secretRoom, false, false);
+                                secretRoom.AddDoor(GetInverseDoorPosition(GetDoorPosition(new Vector2Int(0, direction.y))), room1, true, true);
+                                secretRoom.AddDoor(GetInverseDoorPosition(GetDoorPosition(new Vector2Int(direction.x, 0))), room2, true, true);
 
-                                room1.ChangeDoorState(GetDoorPosition(new Vector2Int(direction.x, 0)), Door.STATE.SECRET);
-                                room2.ChangeDoorState(GetDoorPosition(new Vector2Int(0, direction.y)), Door.STATE.SECRET);
-                                secretRoom.ChangeDoorState(GetInverseDoorPosition(GetDoorPosition(new Vector2Int(direction.x, 0))), Door.STATE.SECRET);
+                                room1.ChangeDoorState(GetDoorPosition(new Vector2Int(0, direction.y)), Door.STATE.SECRET);
+                                room2.ChangeDoorState(GetDoorPosition(new Vector2Int(direction.x, 0)), Door.STATE.SECRET);
                                 secretRoom.ChangeDoorState(GetInverseDoorPosition(GetDoorPosition(new Vector2Int(0, direction.y))), Door.STATE.SECRET);
+                                secretRoom.ChangeDoorState(GetInverseDoorPosition(GetDoorPosition(new Vector2Int(direction.x, 0))), Door.STATE.SECRET);
 
                                 secretRoomGenerated = true;
                             }
@@ -714,15 +714,15 @@ public class DonjonGenerator : MonoBehaviour
 
                         if (roomsDico.TryGetValue(room.Key + new Vector2Int(direction.x, 0), out room1) && roomsDico.TryGetValue(room.Key + new Vector2Int(0, direction.y), out room2))
                         {
-                            room1.AddDoor(GetDoorPosition(new Vector2Int(direction.x, 0)), secretRoom, false, false);
-                            room2.AddDoor(GetDoorPosition(new Vector2Int(0, direction.y)), secretRoom, false, false);
-                            secretRoom.AddDoor(GetInverseDoorPosition(GetDoorPosition(new Vector2Int(direction.x, 0))), room1, true, true);
-                            secretRoom.AddDoor(GetInverseDoorPosition(GetDoorPosition(new Vector2Int(0, direction.y))), room2, true, true);
+                            room1.AddDoor(GetDoorPosition(new Vector2Int(0, direction.y)), secretRoom, false, false);
+                            room2.AddDoor(GetDoorPosition(new Vector2Int(direction.x, 0)), secretRoom, false, false);
+                            secretRoom.AddDoor(GetInverseDoorPosition(GetDoorPosition(new Vector2Int(0, direction.y))), room1, true, true);
+                            secretRoom.AddDoor(GetInverseDoorPosition(GetDoorPosition(new Vector2Int(direction.x, 0))), room2, true, true);
 
-                            room1.ChangeDoorState(GetDoorPosition(new Vector2Int(direction.x, 0)), Door.STATE.SECRET);
-                            room2.ChangeDoorState(GetDoorPosition(new Vector2Int(0, direction.y)), Door.STATE.SECRET);
-                            secretRoom.ChangeDoorState(GetInverseDoorPosition(GetDoorPosition(new Vector2Int(direction.x, 0))), Door.STATE.SECRET);
+                            room1.ChangeDoorState(GetDoorPosition(new Vector2Int(0, direction.y)), Door.STATE.SECRET);
+                            room2.ChangeDoorState(GetDoorPosition(new Vector2Int(direction.x, 0)), Door.STATE.SECRET);
                             secretRoom.ChangeDoorState(GetInverseDoorPosition(GetDoorPosition(new Vector2Int(0, direction.y))), Door.STATE.SECRET);
+                            secretRoom.ChangeDoorState(GetInverseDoorPosition(GetDoorPosition(new Vector2Int(direction.x, 0))), Door.STATE.SECRET);
 
                             secretRoomGenerated = true;
                             break;
