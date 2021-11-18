@@ -47543,19 +47543,19 @@ MonoBehaviour:
   isStartRoom: 0
   position: {x: 1, y: 0}
   time: 4
-  type: 6
+  type: 4
   info:
     upDoors:
       canBeDoor: 1
-      mustBeDoor: 0
+      mustBeDoor: 1
     leftDoors:
       canBeDoor: 1
-      mustBeDoor: 0
+      mustBeDoor: 1
     bottomDoors:
-      canBeDoor: 1
+      canBeDoor: 0
       mustBeDoor: 0
     rightDoors:
-      canBeDoor: 1
+      canBeDoor: 0
       mustBeDoor: 0
   isComeBack: 0
 --- !u!50 &8948790715967009552

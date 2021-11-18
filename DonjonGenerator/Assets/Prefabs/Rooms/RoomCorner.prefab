@@ -47390,20 +47390,20 @@ MonoBehaviour:
   isStartRoom: 0
   position: {x: 1, y: 0}
   time: 4
-  type: 6
+  type: 4
   info:
     upDoors:
-      canBeDoor: 1
+      canBeDoor: 0
       mustBeDoor: 0
     leftDoors:
-      canBeDoor: 1
+      canBeDoor: 0
       mustBeDoor: 0
     bottomDoors:
       canBeDoor: 1
-      mustBeDoor: 0
+      mustBeDoor: 1
     rightDoors:
       canBeDoor: 1
-      mustBeDoor: 0
+      mustBeDoor: 1
   isComeBack: 0
 --- !u!50 &1272645542096264544
 Rigidbody2D:
