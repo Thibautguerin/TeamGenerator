@@ -543,8 +543,8 @@ public class DonjonGenerator : MonoBehaviour
                 }
                 roomNodeTmp.AddDoor(GetInverseDoorPosition(randomDirection), currentRoom, true, true);
 
-                currentRoom.ChangeDoorState(randomDirection, Door.STATE.OPEN);
-                roomNodeTmp.ChangeDoorState(GetInverseDoorPosition(randomDirection), Door.STATE.OPEN);
+                currentRoom.ChangeDoorState(randomDirection, Door.STATE.WEAKENED);
+                roomNodeTmp.ChangeDoorState(GetInverseDoorPosition(randomDirection), Door.STATE.WEAKENED);
 
                 currentRoom = roomNodeTmp;
             }
@@ -566,8 +566,8 @@ public class DonjonGenerator : MonoBehaviour
                 }
                 newRoom.AddDoor(GetInverseDoorPosition(randomDirection), currentRoom, true, true);
 
-                currentRoom.ChangeDoorState(randomDirection, Door.STATE.OPEN);
-                newRoom.ChangeDoorState(GetInverseDoorPosition(randomDirection), Door.STATE.OPEN);
+                currentRoom.ChangeDoorState(randomDirection, Door.STATE.WEAKENED);
+                newRoom.ChangeDoorState(GetInverseDoorPosition(randomDirection), Door.STATE.WEAKENED);
 
                 roomsDico.Add(newRoom.position, newRoom);
                 currentRoom = newRoom;

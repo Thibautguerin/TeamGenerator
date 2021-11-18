@@ -10,6 +10,7 @@ public class Door : MonoBehaviour {
         CLOSED = 1,
         WALL = 2,
         SECRET = 3,
+        WEAKENED = 4
     }
 
     public const string PLAYER_NAME = "Player";
