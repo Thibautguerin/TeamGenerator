@@ -115,6 +115,8 @@ public class RoomNode
 
 public class DonjonGenerator : MonoBehaviour
 {
+    public static DonjonGenerator Instance;
+
     public int nbDoors = 2;
     [Header("After Start")]
     public int nbRoomsAfterStartMin = 4;
@@ -144,6 +146,20 @@ public class DonjonGenerator : MonoBehaviour
 
     private void Awake()
     {
+        #region Singleton
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(this.gameObject);
+        }
+        else
+        {
+            Instance.SpawnRoom();
+            Destroy(this);
+            return;
+        }
+        #endregion Singleton
+
         if (!useSeed)
         {
             System.Random rand = new System.Random();
@@ -951,7 +967,7 @@ public class DonjonGenerator : MonoBehaviour
         Debug.Log(map);
     }
 
-    private void SpawnRoom()
+    public void SpawnRoom()
     {
         foreach (var item in roomsDico)
         {
