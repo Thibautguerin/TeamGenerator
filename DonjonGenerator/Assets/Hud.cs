@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class Hud : MonoBehaviour
@@ -15,7 +16,7 @@ public class Hud : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        //ActivateTimer(70);
+        ActivateTimer(70);
     }
 
     public void Update()
@@ -25,6 +26,8 @@ public class Hud : MonoBehaviour
         if(TimerText.IsActive())
         {
             timer -= Time.deltaTime;
+            if(timer<0)
+                SceneManager.LoadScene("SampleScene");
             UpdateTimerText();
         }
         while (heartBar.childCount < Player.Instance.life && Player.Instance.life > 0)
@@ -64,7 +67,7 @@ public class Hud : MonoBehaviour
         int second = (int)timer;
         int minute = second / 60;
         second %= 60;
-        string middle = second > 10 ? ":" : ":0";
+        string middle = second >= 10 ? ":" : ":0";
         TimerText.text = minute + middle + second;
     }
 }

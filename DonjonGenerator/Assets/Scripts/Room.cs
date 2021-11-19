@@ -175,6 +175,8 @@ public class Room : MonoBehaviour {
 				item.SetState(Door.STATE.BLOCKED);
 			if (item.State == Door.STATE.WEAKENED)
 				item.SetState(Door.STATE.OPEN);
+			if (shouldClose && item.State == Door.STATE.CLOSED)
+				item.SetState(Door.STATE.OPEN);
         }
     }
 
