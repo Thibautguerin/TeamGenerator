@@ -183,7 +183,11 @@ public class Enemy : MonoBehaviour
 		switch (_state)
         {
             case STATE.STUNNED: _currentMovement = stunnedMovement; break;
-            case STATE.DEAD: EndBlink(); Destroy(gameObject); break;
+            case STATE.DEAD: 
+                EndBlink(); Destroy(gameObject);
+                if (name == "Boss")
+                    DonjonGenerator.Instance.BossDeath();
+                break;
             default: _currentMovement = defaultMovement; break;
         }
 
