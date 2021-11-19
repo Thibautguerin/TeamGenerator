@@ -676,7 +676,7 @@ public class DonjonGenerator : MonoBehaviour
                 {
                     room.Value.roomType = RoomType.HARDROOM;
                     canCreatHardRoom = false;
-                    if (!secretRoomGenerated && !roomsDico.ContainsKey(room.Key + direction))
+                    if (!secretRoomGenerated && room.Value.isComeBackPath && !roomsDico.ContainsKey(room.Key + direction))
                     {
                         int rand1 = random.Next(0, 100);
 
@@ -714,7 +714,7 @@ public class DonjonGenerator : MonoBehaviour
         {
             foreach (KeyValuePair<Vector2Int, RoomNode> room in roomsDico)
             {
-                if (room.Value.roomType == RoomType.HARDROOM)
+                if (room.Value.roomType == RoomType.HARDROOM && room.Value.isComeBackPath)
                 {
                     Vector2Int direction = new Vector2Int();
 
