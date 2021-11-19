@@ -69,6 +69,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Rooms:
+  - {fileID: 2727901896201246472, guid: d3fd9fe757ef52642a0481c8be8dce64, type: 3}
   - {fileID: 4913216615585518894, guid: e65a8e81af42df14dbfbd0911d75274e, type: 3}
   - {fileID: 3142845277195806193, guid: 9a83fd1948c67874ba914b20d9ed8b6e, type: 3}
   - {fileID: 9151449272492141550, guid: 3c650951117e88042b743fee530ecbcb, type: 3}
@@ -110,7 +111,6 @@ MonoBehaviour:
   - {fileID: 5310670680248060175, guid: c7338d3825808884b8f709d6c3c30dc8, type: 3}
   - {fileID: 2829508140725769514, guid: e4e97a111480fb147a0cec3a9196fc54, type: 3}
   - {fileID: 2565553793302186429, guid: 71f54f1cc8b764549b7773ca6bb0494e, type: 3}
-  - {fileID: 7108475231643068197, guid: 10d1a4013ee13744fa827d22e6140030, type: 3}
   - {fileID: 2832317771977866186, guid: 6cc6a0d0a44346743a4e0cc6ac73e5ea, type: 3}
   - {fileID: 1648870301567699779, guid: c89ed9e76f847a44ebd630add773e194, type: 3}
   - {fileID: 148307353776679643, guid: 3dcd3ec93c81ff9458fe16f5249881bf, type: 3}
@@ -135,5 +135,5 @@ MonoBehaviour:
   - {fileID: 8948790715967009553, guid: a1ccd734e5c2b054b925e362d63620bd, type: 3}
   - {fileID: 5279882867881345554, guid: 552a6cb1193466341a63fd4d63baaa13, type: 3}
   - {fileID: 5837500346369448536, guid: 14425d22d3ead644eb6af80f3e67d719, type: 3}
-  - {fileID: 2727901896201246472, guid: d3fd9fe757ef52642a0481c8be8dce64, type: 3}
   closePercent: 0.8
+  timeSum: 0
