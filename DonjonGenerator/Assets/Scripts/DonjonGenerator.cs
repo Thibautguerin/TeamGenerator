@@ -567,15 +567,17 @@ public class DonjonGenerator : MonoBehaviour
             {
                 roomNodeTmp.isComeBackPath = true;
 
-                roomNodeTmp.AddDoor(GetInverseDoorPosition(randomDirection), currentRoom, true, true);
-                if (currentRoom.pathType == PathType.COMEBACK)
+                if (currentRoom.doorsState[(int)randomDirection] == Door.STATE.WALL || roomNodeTmp.doorsState[(int)GetInverseDoorPosition(randomDirection)] == Door.STATE.WALL)
                 {
-                    currentRoom.AddDoor(randomDirection, roomNodeTmp, true, false);
-                    currentRoom.ChangeDoorState(randomDirection, Door.STATE.WEAKENED);
-                    roomNodeTmp.ChangeDoorState(GetInverseDoorPosition(randomDirection), Door.STATE.WEAKENED);
-                }
-                else if (currentRoom.doorsState[(int)randomDirection] == Door.STATE.WALL || roomNodeTmp.doorsState[(int)GetInverseDoorPosition(randomDirection)] == Door.STATE.WALL)
-                {
+                    if (currentRoom.pathType == PathType.COMEBACK)
+                    {
+                        currentRoom.AddDoor(randomDirection, roomNodeTmp, true, false);
+                    }
+                    else
+                    {
+                        currentRoom.AddDoor(randomDirection, roomNodeTmp, false, false);
+                    }
+                    roomNodeTmp.AddDoor(GetInverseDoorPosition(randomDirection), currentRoom, false, true);
                     currentRoom.ChangeDoorState(randomDirection, Door.STATE.WEAKENED);
                     roomNodeTmp.ChangeDoorState(GetInverseDoorPosition(randomDirection), Door.STATE.WEAKENED);
                 }
