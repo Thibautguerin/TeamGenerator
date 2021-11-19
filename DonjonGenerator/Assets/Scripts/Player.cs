@@ -107,10 +107,6 @@ public class Player : MonoBehaviour {
     private void Update () {
         UpdateState();
         UpdateInputs();
-        if (life <= 0)
-        {
-            SceneManager.LoadScene("SampleScene");
-        }
 	}
 
     // Update physics on FixedUpdate (FixedUpdate can be called multiple times a frame).
@@ -185,7 +181,7 @@ public class Player : MonoBehaviour {
         switch (_state)
         {
             case STATE.STUNNED: _currentMovement = stunnedMovement; break;
-            case STATE.DEAD: EndBlink(); break;
+            case STATE.DEAD: EndBlink(); Hud.Instance.Defeat(); break;
             default: _currentMovement = defaultMovement; break;
         }
 

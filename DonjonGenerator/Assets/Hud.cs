@@ -11,8 +11,10 @@ public class Hud : MonoBehaviour
     public RectTransform heartBar;
     public GameObject heartPrefab;
     public GameObject victoryPanel;
+    public GameObject defeatPanel;
     public Text TimerText;
     public float timer;
+    private bool stopTimer = false;
 
     private void Awake()
     {
@@ -23,11 +25,14 @@ public class Hud : MonoBehaviour
     {
         if (Player.Instance == null)
             return;
-        if(TimerText.IsActive())
+        if(TimerText.IsActive() && !stopTimer)
         {
             timer -= Time.deltaTime;
-            if(timer<0)
-                SceneManager.LoadScene("SampleScene");
+            if (timer < 0) {
+                Attack attack = new Attack();
+                attack.damages = 10;
+                Player.Instance.ApplyHit(attack);
+            }
             UpdateTimerText();
         }
         while (heartBar.childCount < Player.Instance.life && Player.Instance.life > 0)
@@ -73,5 +78,22 @@ public class Hud : MonoBehaviour
     public void Victory()
     {
         victoryPanel.SetActive(true);
+        stopTimer = true;
+    }
+    public void Defeat()
+    {
+        defeatPanel.SetActive(true);
+        stopTimer = true;
+    }
+
+    public void NewLevel()
+    {
+        Destroy(DonjonGenerator.Instance.gameObject);
+        SceneManager.LoadScene("SampleScene");
+    }
+
+    public void Restart()
+    {
+        SceneManager.LoadScene("SampleScene");
     }
 }
