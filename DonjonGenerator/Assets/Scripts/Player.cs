@@ -19,17 +19,6 @@ public class Player : MonoBehaviour {
         public float speedMax = 2.0f;
         public float acceleration = 12.0f;
         public float friction = 12.0f;
-
-        public MovementParameters()
-        {
-        }
-
-        public MovementParameters(MovementParameters movementParameters)
-        {
-            speedMax = movementParameters.speedMax;
-            acceleration = movementParameters.acceleration;
-            friction = movementParameters.friction;
-        }
     }
 
 
@@ -72,7 +61,8 @@ public class Player : MonoBehaviour {
 
     private Rigidbody2D _body = null;
     private Vector2 _direction = Vector2.zero;
-    private MovementParameters _currentMovement = null;
+    [HideInInspector]
+    public MovementParameters _currentMovement = null;
 
     // Attack attributes
     [Header("Attack")]
@@ -90,7 +80,8 @@ public class Player : MonoBehaviour {
     public float controllerDeadZone = 0.3f;
 
     // State attributes
-    private STATE _state = STATE.IDLE;
+    [HideInInspector]
+    public STATE _state = STATE.IDLE;
 
     // Collectible attributes
     private int _keyCount;

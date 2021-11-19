@@ -23,6 +23,14 @@ public class Fountain : MonoBehaviour
             currentDuration = Mathf.Min(boostDuration, currentDuration + Time.deltaTime);
             if (currentDuration == boostDuration)
             {
+                if (Player.Instance._state == Player.STATE.STUNNED)
+                {
+                    Player.Instance._currentMovement = saveStunnedSpeed;
+                }
+                else
+                {
+                    Player.Instance._currentMovement = saveDefaultSpeed;
+                }
                 Player.Instance.defaultMovement = saveDefaultSpeed;
                 Player.Instance.stunnedMovement = saveStunnedSpeed;
                 boostActivated = false;
@@ -34,9 +42,17 @@ public class Fountain : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            saveDefaultSpeed = new Player.MovementParameters(Player.Instance.defaultMovement);
-            saveStunnedSpeed = new Player.MovementParameters(Player.Instance.stunnedMovement);
+            saveDefaultSpeed = Player.Instance.defaultMovement;
+            saveStunnedSpeed = Player.Instance.stunnedMovement;
 
+            if (Player.Instance._state == Player.STATE.STUNNED)
+            {
+                Player.Instance._currentMovement = stunnedSpeedBoost;
+            }
+            else
+            {
+                Player.Instance._currentMovement = speedBoost;
+            }
             Player.Instance.defaultMovement = speedBoost;
             Player.Instance.stunnedMovement = stunnedSpeedBoost;
 

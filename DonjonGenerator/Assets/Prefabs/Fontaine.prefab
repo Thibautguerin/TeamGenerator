@@ -123,7 +123,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speedBoost:
-    speedMax: 5
+    speedMax: 4
     acceleration: 12
     friction: 12
   stunnedSpeedBoost:
