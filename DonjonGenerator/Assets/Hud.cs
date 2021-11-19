@@ -9,16 +9,24 @@ public class Hud : MonoBehaviour
 
     public RectTransform heartBar;
     public GameObject heartPrefab;
+    public Text TimerText;
+    public float timer;
 
     private void Awake()
     {
         Instance = this;
+        //ActivateTimer(70);
     }
 
     public void Update()
     {
         if (Player.Instance == null)
             return;
+        if(TimerText.IsActive())
+        {
+            timer -= Time.deltaTime;
+            UpdateTimerText();
+        }
         while (heartBar.childCount < Player.Instance.life && Player.Instance.life > 0)
         {
             AddHearth();
@@ -42,5 +50,21 @@ public class Hud : MonoBehaviour
         Transform heart = heartBar.GetChild(0);
         heart.SetParent(null);
         GameObject.Destroy(heart.gameObject);
+    }
+
+    public void ActivateTimer(float time)
+    {
+        TimerText.gameObject.SetActive(true);
+        timer = time;
+        UpdateTimerText();
+    }
+
+    public void UpdateTimerText()
+    {
+        int second = (int)timer;
+        int minute = second / 60;
+        second %= 60;
+        string middle = second > 10 ? ":" : ":0";
+        TimerText.text = minute + middle + second;
     }
 }
