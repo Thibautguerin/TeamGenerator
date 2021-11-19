@@ -973,6 +973,7 @@ public class DonjonGenerator : MonoBehaviour
 
     public void SpawnRoom()
     {
+        roomM.timeSum = 0;
         if (randomSave.State == new RandomState().State)
         {
             randomSave = random.Save();
@@ -990,6 +991,11 @@ public class DonjonGenerator : MonoBehaviour
             temp.transform.position = position;
             temp.position = item.Key;
         }
+    }
+
+    public void BossDeath()
+    {
+        roomM.UpdateAllRoom();
     }
     // Pour le chemin de retour -> probabilité qui augment pour aller vers la salle start
 

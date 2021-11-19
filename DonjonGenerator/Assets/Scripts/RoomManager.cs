@@ -13,6 +13,8 @@ public class RoomManager : MonoBehaviour
     private List<Room> HardRooms = new List<Room>();
     private List<Room> SecretRooms = new List<Room>();
     private List<Room> ComeBackRooms = new List<Room>();
+    [HideInInspector]
+    public float timeSum = 0;
 
     private void Awake()
     {
@@ -87,6 +89,8 @@ public class RoomManager : MonoBehaviour
         Room instRoom = Instantiate(possibleRoom[r]);
         instRoom.InitDoor(node.doorsState);
         instRoom.isComeBack = node.isComeBackPath;
+        if (node.isComeBackPath)
+            timeSum += instRoom.time;
         return instRoom;
     }
 
@@ -101,5 +105,6 @@ public class RoomManager : MonoBehaviour
                 item.UpdateRoomAfterBoss(Random.value < closePercent);
             }
         }
+        Hud.Instance.ActivateTimer(timeSum);
     }
 }
