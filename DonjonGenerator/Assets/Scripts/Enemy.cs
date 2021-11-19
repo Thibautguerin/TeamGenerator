@@ -76,7 +76,7 @@ public class Enemy : MonoBehaviour
 
     [Header("Defense")]
     public bool canBeStuned = true;
-    public float knockbackResistance;
+    public float knockbackResistance =0;
 
     private float lastAttackTime = float.MinValue;
 
@@ -272,7 +272,8 @@ public class Enemy : MonoBehaviour
         float magnitude = velocity.magnitude - knockbackResistance;
         if (magnitude > 0)
         {
-            velocity /= velocity.magnitude / knockbackResistance;
+            if(knockbackResistance!=0)
+                velocity /= velocity.magnitude / knockbackResistance;
             _body.velocity = velocity;
         }
         yield return new WaitForSeconds(duration);

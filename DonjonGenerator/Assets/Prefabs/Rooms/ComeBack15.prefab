@@ -47239,7 +47239,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7783746786137768968}
   - component: {fileID: 7783746786137768969}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -47401,6 +47401,7 @@ MonoBehaviour:
     rightDoors:
       canBeDoor: 0
       mustBeDoor: 0
+  isComeBack: 0
 --- !u!50 &7783746786807155584
 Rigidbody2D:
   serializedVersion: 4

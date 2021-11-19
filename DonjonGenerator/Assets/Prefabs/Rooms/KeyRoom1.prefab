@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7416135565051227854}
   - component: {fileID: 7416135565051227697}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -47265,7 +47265,7 @@ MonoBehaviour:
   m_tilemaps:
   - {fileID: 7416135565051227697}
   - {fileID: 7416135566729410202}
-  m_selectedIndex: 1
+  m_selectedIndex: 0
   m_unselectedColorMultiplier: 1
   m_defaultTilemapWindowVisible: 0
   m_displayTilemapRList: 1
@@ -47302,6 +47302,7 @@ MonoBehaviour:
     rightDoors:
       canBeDoor: 1
       mustBeDoor: 0
+  isComeBack: 0
 --- !u!50 &7416135565924250729
 Rigidbody2D:
   serializedVersion: 4
