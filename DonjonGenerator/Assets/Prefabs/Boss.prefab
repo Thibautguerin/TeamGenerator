@@ -176,7 +176,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   life: 15
-  invincibilityDuration: 0
+  invincibilityDuration: 0.2
   invincibilityBlinkPeriod: 0.2
   hitLayers:
     serializedVersion: 2
