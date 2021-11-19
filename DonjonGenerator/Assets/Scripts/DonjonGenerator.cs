@@ -496,12 +496,12 @@ public class DonjonGenerator : MonoBehaviour
                 Vector2Int orientation;
                 if (shortestDistance.Count == 3)
                 {
-                    // 70 20 10
-                    if (randomNb <= 69)
+                    // 80 15 5
+                    if (randomNb <= 79)
                     {
                         orientation = shortestDistance[0].Value;
                     }
-                    else if (randomNb <= 89)
+                    else if (randomNb <= 94)
                     {
                         orientation = shortestDistance[1].Value;
                     }
