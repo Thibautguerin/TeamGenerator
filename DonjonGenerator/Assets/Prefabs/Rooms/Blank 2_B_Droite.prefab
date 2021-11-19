@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3142845276192077991}
   - component: {fileID: 3142845276192077988}
   - component: {fileID: 3142845276192077989}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: 0_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -312,7 +312,7 @@ MonoBehaviour:
   m_tilemaps:
   - {fileID: 3142845277854293831}
   - {fileID: 3142845276581077077}
-  m_selectedIndex: 0
+  m_selectedIndex: 1
   m_unselectedColorMultiplier: 1
   m_defaultTilemapWindowVisible: 0
   m_displayTilemapRList: 1
