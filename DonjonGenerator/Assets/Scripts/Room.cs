@@ -21,6 +21,7 @@ public class Room : MonoBehaviour {
 	private List<Door> doorList = new List<Door>();
 	[HideInInspector]
 	public bool isComeBack = false;
+	private bool bossKilled = false;
 
 
     void Awake()
@@ -109,6 +110,8 @@ public class Room : MonoBehaviour {
 	
 	public void OnEnterRoom()
     {
+		if (bossKilled && isStartRoom)
+			Hud.Instance.Victory();
         CameraFollow cameraFollow = Camera.main.GetComponent<CameraFollow>();
         Bounds cameraBounds = GetWorldRoomBounds();
         cameraFollow.SetBounds(cameraBounds);
@@ -169,6 +172,7 @@ public class Room : MonoBehaviour {
 
 	public void UpdateRoomAfterBoss(bool shouldClose)
     {
+		bossKilled = true;
         foreach (var item in doorList)
         {
 			if (shouldClose && item.State == Door.STATE.OPEN)

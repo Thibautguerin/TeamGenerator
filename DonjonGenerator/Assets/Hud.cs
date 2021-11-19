@@ -10,13 +10,13 @@ public class Hud : MonoBehaviour
 
     public RectTransform heartBar;
     public GameObject heartPrefab;
+    public GameObject victoryPanel;
     public Text TimerText;
     public float timer;
 
     private void Awake()
     {
         Instance = this;
-        ActivateTimer(70);
     }
 
     public void Update()
@@ -69,5 +69,9 @@ public class Hud : MonoBehaviour
         second %= 60;
         string middle = second >= 10 ? ":" : ":0";
         TimerText.text = minute + middle + second;
+    }
+    public void Victory()
+    {
+        victoryPanel.SetActive(true);
     }
 }
