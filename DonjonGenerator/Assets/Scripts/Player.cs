@@ -19,6 +19,17 @@ public class Player : MonoBehaviour {
         public float speedMax = 2.0f;
         public float acceleration = 12.0f;
         public float friction = 12.0f;
+
+        public MovementParameters()
+        {
+        }
+
+        public MovementParameters(MovementParameters movementParameters)
+        {
+            speedMax = movementParameters.speedMax;
+            acceleration = movementParameters.acceleration;
+            friction = movementParameters.friction;
+        }
     }
 
 

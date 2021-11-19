@@ -34,8 +34,8 @@ public class Fountain : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            saveDefaultSpeed = Player.Instance.defaultMovement;
-            saveStunnedSpeed = Player.Instance.stunnedMovement;
+            saveDefaultSpeed = new Player.MovementParameters(Player.Instance.defaultMovement);
+            saveStunnedSpeed = new Player.MovementParameters(Player.Instance.stunnedMovement);
 
             Player.Instance.defaultMovement = speedBoost;
             Player.Instance.stunnedMovement = stunnedSpeedBoost;
